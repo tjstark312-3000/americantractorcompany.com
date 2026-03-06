@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>American Tractor Company — Built for the American Farmer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --soil:   #100d06;
+    --earth:  #1c1509;
+    --furrow: #261b0c;
+    --grain:  #c8a254;
+    --wheat:  #e6d09a;
+    --straw:  #f2e8cc;
+    --white:  #f8f3eb;
+    --muted:  #6b5c42;
+    --dim:    #4a3f2e;
+    --red:    #b83228;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--soil); color:var(--white); font-family:'Instrument Sans',sans-serif; overflow-x:hidden; cursor:none; -webkit-font-smoothing:antialiased; }
+
+  /* CURSOR */
+  #cur  { width:8px;height:8px;background:var(--grain);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s; }
+  #curR { width:28px;height:28px;border:1px solid rgba(200,162,84,.35);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s; }
+
+  /* NAV */
+  nav { position:fixed;top:0;left:0;right:0;z-index:200;padding:22px 60px;display:flex;justify-content:space-between;align-items:center;transition:background .4s; }
+  nav.scrolled { background:rgba(16,13,6,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,162,84,.1); }
+  .logo { display:flex;align-items:center;gap:14px;text-decoration:none; }
+  .logo-mark { width:34px;height:34px;border:1px solid rgba(200,162,84,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .logo-text { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--wheat);line-height:1.4; }
+  .logo-text span { display:block;color:var(--grain);font-size:8.5px;letter-spacing:.22em;margin-top:1px; }
+  .nav-links { display:flex;gap:40px; }
+  .nav-links a { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--wheat);opacity:.5;text-decoration:none;transition:opacity .2s; }
+  .nav-links a:hover { opacity:1; }
+  .nav-cta { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--soil);background:var(--grain);padding:11px 22px;text-decoration:none;transition:background .2s; }
+  .nav-cta:hover { background:var(--wheat); }
+
+  /* HERO */
+  .hero { min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 60px 88px;position:relative;overflow:hidden; }
+  .hero-glow { position:absolute;inset:0;background:radial-gradient(ellipse 100% 55% at 50% 105%,rgba(200,162,84,.14) 0%,transparent 55%),radial-gradient(ellipse 60% 30% at 72% 68%,rgba(200,162,84,.05) 0%,transparent 50%);pointer-events:none; }
+  .horizon { position:absolute;bottom:38%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 0%,rgba(200,162,84,.25) 15%,rgba(200,162,84,.45) 50%,rgba(200,162,84,.25) 85%,transparent 100%); }
+  .field-canvas { position:absolute;bottom:0;left:0;right:0;height:38%;pointer-events:none;overflow:hidden; }
+  .tractor-wrap { position:absolute;bottom:35%;right:6%;width:460px;opacity:0;transform:translateX(50px);animation:slideIn 1.6s cubic-bezier(.16,1,.3,1) 1s forwards; }
+  @keyframes slideIn { to { opacity:1;transform:translateX(0); } }
+  .scan-line { position:absolute;top:20%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(200,162,84,.55),transparent);animation:scan 3.5s ease-in-out 2.5s infinite;opacity:0; }
+  @keyframes scan { 0%{top:12%;opacity:0}5%{opacity:.7}95%{opacity:.7}100%{top:88%;opacity:0} }
+  .hero-label { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--grain);margin-bottom:24px;opacity:0;transform:translateY(16px);animation:up .7s ease .4s forwards; }
+  .hero-h1 { font-family:'DM Serif Display',serif;font-size:clamp(50px,6.5vw,104px);line-height:.93;letter-spacing:-.025em;max-width:800px;opacity:0;transform:translateY(28px);animation:up .9s ease .55s forwards; }
+  .hero-h1 em { font-style:italic;color:var(--grain); }
+  .hero-p { font-size:17px;line-height:1.72;color:var(--muted);max-width:500px;margin-top:28px;opacity:0;transform:translateY(20px);animation:up .8s ease .75s forwards; }
+  .hero-actions { display:flex;align-items:center;gap:28px;margin-top:44px;opacity:0;transform:translateY(20px);animation:up .8s ease .9s forwards; }
+  .btn-primary { font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--soil);background:var(--grain);padding:15px 34px;text-decoration:none;display:inline-block;position:relative;transition:background .2s; }
+  .btn-primary::after { content:'';position:absolute;inset:0;border:1px solid rgba(200,162,84,.45);transform:translate(5px,5px);transition:transform .2s;pointer-events:none; }
+  .btn-primary:hover { background:var(--wheat); }
+  .btn-primary:hover::after { transform:translate(7px,7px); }
+  .btn-text { font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--wheat);opacity:.45;text-decoration:none;display:flex;align-items:center;gap:10px;transition:opacity .2s; }
+  .btn-text:hover { opacity:1; }
+  .btn-text::before { content:'↓';font-size:13px; }
+  .hero-stats { display:flex;gap:52px;margin-top:68px;padding-top:34px;border-top:1px solid rgba(200,162,84,.12);opacity:0;animation:up .8s ease 1.1s forwards; }
+  .hsv { font-family:'DM Serif Display',serif;font-size:34px;color:var(--grain);line-height:1;letter-spacing:-.02em; }
+  .hsl { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:6px;line-height:1.55; }
+  @keyframes up { to{opacity:1;transform:translateY(0)} }
+
+  /* TICKER */
+  .ticker { background:var(--grain);padding:12px 0;overflow:hidden;white-space:nowrap;user-select:none; }
+  .t-track { display:inline-flex;animation:tick 38s linear infinite; }
+  .t-track:hover { animation-play-state:paused; }
+  .ti { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--soil);padding:0 36px;opacity:.85; }
+  .td { opacity:.3; }
+  @keyframes tick { to{transform:translateX(-50%)} }
+
+  /* SHARED */
+  section { padding:120px 60px; }
+  .stag { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--grain);opacity:.7;margin-bottom:18px; }
+  .reveal { opacity:0;transform:translateY(26px);transition:opacity .85s ease,transform .85s ease; }
+  .reveal.in { opacity:1;transform:translateY(0); }
+  .d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}.d4{transition-delay:.48s}
+
+  /* PROBLEM */
+  .problem { background:var(--earth);display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:start; }
+  .prob-h2 { font-family:'DM Serif Display',serif;font-size:clamp(34px,3.6vw,58px);line-height:1.06;letter-spacing:-.02em;margin-bottom:32px; }
+  .prob-h2 em { font-style:italic;color:var(--grain); }
+  .prob-quote { border-left:2px solid var(--grain);padding:18px 0 18px 26px;margin:36px 0; }
+  .prob-quote p { font-family:'DM Serif Display',serif;font-size:21px;line-height:1.45;font-style:italic;color:var(--wheat); }
+  .prob-quote cite { display:block;margin-top:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-style:normal; }
+  .prob-body p { font-size:16px;line-height:1.76;color:rgba(248,243,235,.58);margin-bottom:18px; }
+  .pain-list { list-style:none;margin-top:44px; }
+  .pain-item { display:grid;grid-template-columns:40px 1fr;gap:18px;align-items:start;padding:22px 0;border-bottom:1px solid rgba(200,162,84,.1); }
+  .pain-item:first-child { border-top:1px solid rgba(200,162,84,.1); }
+  .pain-n { font-family:'DM Mono',monospace;font-size:10px;color:var(--grain);opacity:.55;letter-spacing:.1em;padding-top:3px; }
+  .pain-t strong { display:block;font-size:15px;font-weight:600;color:var(--white);margin-bottom:6px; }
+  .pain-t p { font-size:13px;line-height:1.65;color:var(--muted); }
+
+  /* SOLUTION */
+  .solution { background:var(--soil); }
+  .sol-top { display:grid;grid-template-columns:1fr 1fr;gap:76px;margin-bottom:72px; }
+  .sol-h2 { font-family:'DM Serif Display',serif;font-size:clamp(34px,3.6vw,58px);line-height:1.06;letter-spacing:-.02em; }
+  .sol-h2 em { font-style:italic;color:var(--grain); }
+  .sol-desc { font-size:16px;line-height:1.76;color:rgba(248,243,235,.52);padding-top:8px; }
+  .sol-desc strong { color:var(--wheat);font-weight:600; }
+  .stack-list { display:flex;flex-direction:column; }
+  .stack-item { border-top:1px solid rgba(200,162,84,.1);cursor:pointer;transition:background .25s; }
+  .stack-item:last-child { border-bottom:1px solid rgba(200,162,84,.1); }
+  .stack-item:hover { background:rgba(200,162,84,.03); }
+  .stack-item.open { background:rgba(200,162,84,.05); }
+  .s-head { display:grid;grid-template-columns:52px 1fr auto auto;gap:20px;align-items:center;padding:26px 30px; }
+  .sn { font-family:'DM Mono',monospace;font-size:10px;color:var(--grain);opacity:.5;letter-spacing:.1em; }
+  .sname { font-family:'DM Serif Display',serif;font-size:20px;letter-spacing:-.01em; }
+  .sbadge { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--grain);background:rgba(200,162,84,.1);padding:5px 12px;white-space:nowrap; }
+  .sarrow { font-size:18px;color:var(--grain);opacity:.4;transition:transform .3s,opacity .2s; }
+  .stack-item.open .sarrow { transform:rotate(45deg);opacity:.8; }
+  .s-body { display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease; }
+  .stack-item.open .s-body { grid-template-rows:1fr; }
+  .s-body-inner { overflow:hidden;display:grid;grid-template-columns:52px 1fr 1fr;gap:20px;padding:0 30px 0;transition:padding .35s; }
+  .stack-item.open .s-body-inner { padding:0 30px 30px; }
+  .s-body-tech { font-size:14px;line-height:1.7;color:rgba(248,243,235,.48); }
+  .s-body-farm { padding:18px 22px;border:1px solid rgba(200,162,84,.15);background:rgba(200,162,84,.04); }
+  .sfarm-lbl { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--grain);opacity:.7;margin-bottom:10px; }
+  .s-body-farm p { font-size:14px;line-height:1.65;color:var(--wheat); }
+
+  /* NUMBERS */
+  .numbers-band { background:var(--grain);display:grid;grid-template-columns:repeat(4,1fr); }
+  .nb { padding:68px 48px;border-right:1px solid rgba(16,13,6,.15); }
+  .nb:last-child { border-right:none; }
+  .nb-v { font-family:'DM Serif Display',serif;font-size:66px;color:var(--soil);line-height:1;letter-spacing:-.03em; }
+  .nb-l { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(16,13,6,.48);margin-top:12px;line-height:1.55; }
+
+  /* FOR FARMERS */
+  .for-farmers { background:var(--furrow); }
+  .ff-h2 { font-family:'DM Serif Display',serif;font-size:clamp(34px,3.6vw,58px);line-height:1.06;letter-spacing:-.02em;max-width:560px;margin-bottom:68px; }
+  .ff-h2 em { font-style:italic;color:var(--grain); }
+  .ff-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px; }
+  .ff-card { background:rgba(255,255,255,.025);border:1px solid rgba(200,162,84,.08);padding:42px 34px;transition:background .3s,border-color .3s; }
+  .ff-card:hover { background:rgba(200,162,84,.05);border-color:rgba(200,162,84,.22); }
+  .ff-num { font-family:'DM Serif Display',serif;font-size:50px;color:var(--grain);line-height:1;letter-spacing:-.02em;margin-bottom:20px; }
+  .ff-num sup { font-size:20px;vertical-align:top;margin-top:12px;display:inline-block; }
+  .ff-title { font-size:17px;font-weight:600;margin-bottom:10px; }
+  .ff-text { font-size:13px;line-height:1.7;color:rgba(248,243,235,.48); }
+  .testimonial { margin-top:76px;padding-top:60px;border-top:1px solid rgba(200,162,84,.12);display:grid;grid-template-columns:1fr 1fr;gap:76px;align-items:center; }
+  .t-quote { font-family:'DM Serif Display',serif;font-size:clamp(22px,2.4vw,34px);line-height:1.28;letter-spacing:-.01em;font-style:italic;color:var(--wheat); }
+  .t-attr { margin-top:22px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted); }
+  .t-attr strong { color:var(--grain); }
+  .t-right { font-size:15px;line-height:1.76;color:rgba(248,243,235,.48); }
+
+  /* AMERICAN */
+  .american { background:var(--soil);display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center; }
+  .am-h2 { font-family:'DM Serif Display',serif;font-size:clamp(34px,3.6vw,58px);line-height:1.06;letter-spacing:-.02em;margin-bottom:28px; }
+  .am-h2 em { font-style:italic;color:var(--grain); }
+  .am-p { font-size:16px;line-height:1.76;color:rgba(248,243,235,.52);margin-bottom:18px; }
+  .am-pillars { margin-top:44px; }
+  .ap-item { display:flex;align-items:center;gap:18px;padding:18px 0;border-bottom:1px solid rgba(200,162,84,.1); }
+  .ap-item:first-child { border-top:1px solid rgba(200,162,84,.1); }
+  .ap-dot { width:5px;height:5px;background:var(--grain);border-radius:50%;flex-shrink:0; }
+  .ap-text { font-size:15px;color:var(--wheat); }
+  .flag-block { aspect-ratio:1.2;border:1px solid rgba(200,162,84,.12);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center; }
+  .flag-bg { position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(184,50,40,.1) 0px,rgba(184,50,40,.1) 1px,transparent 1px,transparent calc(100%/13)); }
+  .flag-txt { position:relative;z-index:1;text-align:center;padding:40px; }
+  .flag-txt p { font-family:'DM Serif Display',serif;font-size:clamp(26px,2.8vw,46px);line-height:1.22;letter-spacing:-.02em;color:var(--white); }
+  .flag-txt em { font-style:italic;color:var(--grain); }
+  .flag-txt small { display:block;margin-top:20px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted); }
+
+  /* INVEST */
+  .invest { background:var(--earth);display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:start; }
+  .inv-h2 { font-family:'DM Serif Display',serif;font-size:clamp(34px,3.6vw,58px);line-height:1.06;letter-spacing:-.02em;margin-bottom:22px; }
+  .inv-h2 em { font-style:italic;color:var(--grain); }
+  .inv-p { font-size:15px;line-height:1.76;color:rgba(248,243,235,.52);margin-bottom:14px; }
+  .inv-tabs { display:flex;margin:36px 0 28px;border:1px solid rgba(200,162,84,.15); }
+  .inv-tab { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:12px 22px;cursor:pointer;transition:all .2s;flex:1;text-align:center;border:none;background:none; }
+  .inv-tab.active { background:var(--grain);color:var(--soil); }
+  .form-f { display:flex;flex-direction:column;gap:12px; }
+  .form-f input,.form-f select,.form-f textarea { background:rgba(255,255,255,.04);border:1px solid rgba(200,162,84,.13);color:var(--white);font-family:'Instrument Sans',sans-serif;font-size:14px;padding:14px 17px;outline:none;transition:border-color .2s;width:100%; }
+  .form-f input::placeholder,.form-f textarea::placeholder { color:var(--dim); }
+  .form-f input:focus,.form-f textarea:focus { border-color:rgba(200,162,84,.5); }
+  .form-f textarea { resize:vertical;min-height:90px; }
+  .form-f select { color:var(--dim); }
+  .form-f select option { background:var(--earth);color:var(--white); }
+  .form-sub { font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--soil);background:var(--grain);padding:15px 30px;border:none;cursor:pointer;align-self:flex-start;transition:background .2s; }
+  .form-sub:hover { background:var(--wheat); }
+  .inv-why-lbl { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--grain);opacity:.7;margin-bottom:26px; }
+  .inv-points { display:flex;flex-direction:column; }
+  .inv-pt { display:grid;grid-template-columns:22px 1fr;gap:18px;padding:22px 0;border-bottom:1px solid rgba(200,162,84,.08); }
+  .inv-pt:first-child { border-top:1px solid rgba(200,162,84,.08); }
+  .ip-ic { color:var(--grain);font-size:16px;padding-top:2px; }
+  .ip-t { font-size:14px;font-weight:600;margin-bottom:5px; }
+  .ip-p { font-size:13px;line-height:1.65;color:rgba(248,243,235,.42); }
+  .mkt-box { margin-top:44px;padding:28px;background:rgba(200,162,84,.05);border:1px solid rgba(200,162,84,.14); }
+  .mkt-lbl { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--grain);opacity:.7;margin-bottom:18px; }
+  .mkt-row { display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(200,162,84,.08); }
+  .mkt-row:last-child { border-bottom:none; }
+  .mr-l { font-size:13px;color:var(--muted); }
+  .mr-v { font-family:'DM Serif Display',serif;font-size:22px;color:var(--wheat);letter-spacing:-.01em; }
+
+  /* FOOTER */
+  footer { background:var(--soil);border-top:1px solid rgba(200,162,84,.1);padding:76px 60px 52px; }
+  .ft-top { display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr;gap:56px;margin-bottom:60px; }
+  .fb { font-family:'DM Serif Display',serif;font-size:24px;color:var(--grain);letter-spacing:-.01em;margin-bottom:14px; }
+  .fd { font-size:14px;line-height:1.7;color:var(--muted);max-width:280px; }
+  .fc-h { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--grain);opacity:.65;margin-bottom:18px; }
+  .fl { list-style:none;display:flex;flex-direction:column;gap:10px; }
+  .fl a { font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s; }
+  .fl a:hover { color:var(--wheat); }
+  .ft-bot { display:flex;justify-content:space-between;align-items:center;padding-top:32px;border-top:1px solid rgba(200,162,84,.08); }
+  .fc { font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.08em; }
+  .fm { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--grain);opacity:.45; }
+  .fbadge { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--grain);border:1px solid rgba(200,162,84,.22);padding:5px 13px;opacity:.5; }
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="curR"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <div class="logo-mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="rgba(200,162,84,.8)" stroke-width="1.2">
+        <circle cx="9" cy="9" r="7"/>
+        <path d="M9 2 L9 16 M2 9 L16 9"/>
+        <circle cx="9" cy="9" r="2.5" fill="rgba(200,162,84,.25)"/>
+      </svg>
+    </div>
+    <div class="logo-text">American Tractor Co.<span>AgFM-1 · Autonomous Platform</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="#problem">The Problem</a>
+    <a href="#solution">Technology</a>
+    <a href="#farmers">For Farmers</a>
+    <a href="#invest">Investors</a>
+  </div>
+  <a href="#invest" class="nav-cta">Get Involved</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="horizon"></div>
+  <div class="field-canvas" id="fieldCanvas"></div>
+
+  <div class="tractor-wrap">
+    <div class="scan-line"></div>
+    <svg viewBox="0 0 480 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="220" cy="286" rx="190" ry="10" fill="rgba(200,162,84,.05)"/>
+      <!-- Rear wheel -->
+      <circle cx="155" cy="224" r="64" stroke="rgba(200,162,84,.42)" stroke-width="1.5"/>
+      <circle cx="155" cy="224" r="46" stroke="rgba(200,162,84,.18)" stroke-width="1"/>
+      <circle cx="155" cy="224" r="58" stroke="rgba(200,162,84,.1)" stroke-width="5" stroke-dasharray="8 12"/>
+      <circle cx="155" cy="224" r="12" fill="rgba(200,162,84,.18)" stroke="rgba(200,162,84,.45)" stroke-width="1"/>
+      <line x1="155" y1="160" x2="155" y2="288" stroke="rgba(200,162,84,.22)" stroke-width="1"/>
+      <line x1="91"  y1="224" x2="219" y2="224" stroke="rgba(200,162,84,.22)" stroke-width="1"/>
+      <line x1="110" y1="179" x2="200" y2="269" stroke="rgba(200,162,84,.22)" stroke-width="1"/>
+      <line x1="200" y1="179" x2="110" y2="269" stroke="rgba(200,162,84,.22)" stroke-width="1"/>
+      <!-- Body -->
+      <path d="M155 188 L320 183 L345 205 L350 240 L230 240 L155 240 Z" fill="rgba(200,162,84,.04)" stroke="rgba(200,162,84,.28)" stroke-width="1.5"/>
+      <rect x="165" y="200" width="58" height="34" rx="1" fill="rgba(200,162,84,.03)" stroke="rgba(200,162,84,.18)" stroke-width="1"/>
+      <line x1="175" y1="208" x2="213" y2="208" stroke="rgba(200,162,84,.12)" stroke-width="1"/>
+      <line x1="175" y1="217" x2="213" y2="217" stroke="rgba(200,162,84,.12)" stroke-width="1"/>
+      <line x1="175" y1="226" x2="213" y2="226" stroke="rgba(200,162,84,.12)" stroke-width="1"/>
+      <!-- Cab -->
+      <path d="M230 130 L310 128 L330 148 L345 183 L225 185 L225 130 Z" fill="rgba(200,162,84,.06)" stroke="rgba(200,162,84,.38)" stroke-width="1.5"/>
+      <path d="M237 138 L305 136 L320 152 L235 154 Z" fill="rgba(200,162,84,.1)" stroke="rgba(200,162,84,.2)" stroke-width="1"/>
+      <path d="M237 158 L295 157 L310 166 L237 167 Z" fill="rgba(200,162,84,.06)" stroke="rgba(200,162,84,.13)" stroke-width="1"/>
+      <!-- Sensor roof rack -->
+      <rect x="240" y="122" width="68" height="7" rx="1" fill="rgba(200,162,84,.05)" stroke="rgba(200,162,84,.32)" stroke-width="1"/>
+      <rect x="248" y="117" width="10" height="8" fill="rgba(200,162,84,.1)" stroke="rgba(200,162,84,.38)" stroke-width=".8"/>
+      <rect x="263" y="117" width="10" height="8" fill="rgba(200,162,84,.1)" stroke="rgba(200,162,84,.38)" stroke-width=".8"/>
+      <rect x="278" y="117" width="10" height="8" fill="rgba(200,162,84,.1)" stroke="rgba(200,162,84,.38)" stroke-width=".8"/>
+      <rect x="293" y="117" width="8"  height="8" fill="rgba(200,162,84,.1)" stroke="rgba(200,162,84,.38)" stroke-width=".8"/>
+      <!-- GPS -->
+      <line x1="270" y1="120" x2="270" y2="96" stroke="rgba(200,162,84,.6)" stroke-width="1.5"/>
+      <circle cx="270" cy="94" r="3.5" fill="var(--grain)">
+        <animate attributeName="r" values="3.5;6;3.5" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;.2;1" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <line x1="270" y1="94" x2="385" y2="48" stroke="rgba(200,162,84,.18)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite"/></line>
+      <line x1="270" y1="94" x2="425" y2="72" stroke="rgba(200,162,84,.1)"  stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" values="0;-20" dur="1.5s" repeatCount="indefinite"/></line>
+      <!-- Exhaust -->
+      <rect x="248" y="156" width="8" height="28" rx="1" fill="rgba(200,162,84,.05)" stroke="rgba(200,162,84,.28)" stroke-width="1"/>
+      <circle cx="252" cy="150" r="5" fill="rgba(200,162,84,.07)"><animate attributeName="r" values="5;9;5" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".3;0;.3" dur="3s" repeatCount="indefinite"/></circle>
+      <!-- Front wheel -->
+      <circle cx="345" cy="232" r="34" stroke="rgba(200,162,84,.38)" stroke-width="1.5"/>
+      <circle cx="345" cy="232" r="20" stroke="rgba(200,162,84,.16)" stroke-width="1"/>
+      <circle cx="345" cy="232" r="6"  fill="rgba(200,162,84,.22)" stroke="rgba(200,162,84,.45)" stroke-width="1"/>
+      <!-- Implement -->
+      <path d="M350 238 L395 238 L395 248 L350 248 Z" fill="rgba(200,162,84,.03)" stroke="rgba(200,162,84,.18)" stroke-width="1"/>
+      <line x1="395" y1="243" x2="425" y2="243" stroke="rgba(200,162,84,.18)" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <div style="position:relative;z-index:2">
+    <p class="hero-label">American Tractor Company — Building AgFM-1</p>
+    <h1 class="hero-h1">Your farm deserves a tractor that <em>thinks.</em></h1>
+    <p class="hero-p">We're building the world's first foundation model for agriculture — and the autonomous tractor that runs on it. No driver required. No guesswork. Just intelligent machines that work your land the way you would, day and night.</p>
+    <div class="hero-actions">
+      <a href="#invest" class="btn-primary">Partner With Us</a>
+      <a href="#problem" class="btn-text">See the problem we're solving</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hsv">43%</div><div class="hsl">of farm operations now face<br>critical labor shortages</div></div>
+      <div><div class="hsv">$180B</div><div class="hsl">US farm equipment market<br>ripe for disruption</div></div>
+      <div><div class="hsv">24/7</div><div class="hsl">Autonomous operation —<br>harvest never waits</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="t-track">
+    <span class="ti">No driver, no problem</span><span class="ti td">◆</span>
+    <span class="ti">AgFM-1 — World's First Ag Foundation Model</span><span class="ti td">◆</span>
+    <span class="ti">Built for the American Farmer</span><span class="ti td">◆</span>
+    <span class="ti">Works your land while you sleep</span><span class="ti td">◆</span>
+    <span class="ti">Made in America</span><span class="ti td">◆</span>
+    <span class="ti">Full Stack — Model to Metal</span><span class="ti td">◆</span>
+    <span class="ti">Your data stays on your farm</span><span class="ti td">◆</span>
+    <span class="ti">No driver, no problem</span><span class="ti td">◆</span>
+    <span class="ti">AgFM-1 — World's First Ag Foundation Model</span><span class="ti td">◆</span>
+    <span class="ti">Built for the American Farmer</span><span class="ti td">◆</span>
+    <span class="ti">Works your land while you sleep</span><span class="ti td">◆</span>
+    <span class="ti">Made in America</span><span class="ti td">◆</span>
+    <span class="ti">Full Stack — Model to Metal</span><span class="ti td">◆</span>
+    <span class="ti">Your data stays on your farm</span><span class="ti td">◆</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div>
+    <p class="stag reveal">The Problem</p>
+    <h2 class="prob-h2 reveal">American farming is running on <em>empty.</em></h2>
+    <div class="prob-quote reveal">
+      <p>"Finding reliable help for planting and harvest is the biggest thing keeping me up at night. Not yields, not prices — people."</p>
+      <cite>— Iowa corn farmer, 3,200 acres · ATC field research, 2025</cite>
+    </div>
+    <div class="prob-body reveal">
+      <p>The American farmer feeds the world. But the industry is in a slow-motion crisis that Silicon Valley keeps ignoring. Labor is drying up. Input costs are through the roof. Equipment from the legacy OEMs costs a quarter-million dollars and still doesn't think for itself.</p>
+      <p>The technology to fix this exists. It just hasn't been pointed at the right problem yet — until now.</p>
+    </div>
+  </div>
+  <div>
+    <ul class="pain-list">
+      <li class="pain-item reveal">
+        <span class="pain-n">01</span>
+        <div class="pain-t"><strong>The help isn't coming</strong><p>Farm labor availability dropped 30% since 2015. H-2A visa delays leave crops in the field. Farmers can't build a business around a workforce that might not show up.</p></div>
+      </li>
+      <li class="pain-item reveal d1">
+        <span class="pain-n">02</span>
+        <div class="pain-t"><strong>Precision tools that don't connect</strong><p>GPS guidance, yield monitors, soil sensors — all separate apps talking to no one. None of it makes decisions. The farmer still has to do that alone at midnight.</p></div>
+      </li>
+      <li class="pain-item reveal d2">
+        <span class="pain-n">03</span>
+        <div class="pain-t"><strong>Legacy OEMs built for yesterday</strong><p>John Deere, CNH, AGCO — great iron, but their autonomy is bolt-on GPS auto-steer with a marketing budget. No real reasoning. No adaptation. No intelligence.</p></div>
+      </li>
+      <li class="pain-item reveal d3">
+        <span class="pain-n">04</span>
+        <div class="pain-t"><strong>Time is the most valuable crop</strong><p>Planting windows are 10 days. Harvest is unforgiving. Every missed pass, every breakdown, every late start costs real money. Farmers don't need smarter dashboards — they need the work done.</p></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="sol-top">
+    <div>
+      <p class="stag reveal">Our Solution</p>
+      <h2 class="sol-h2 reveal">We built the intelligence first. <em>Then the tractor.</em></h2>
+    </div>
+    <div class="sol-desc reveal d2">
+      <p>Most autonomy startups start with the machine and bolt on AI. We did it the other way. <strong>AgFM-1</strong> is a foundation model trained exclusively on agricultural data — soil chemistry, weather, crop biology, machine telemetry, satellite imagery. The tractor is purpose-built to express it.</p>
+    </div>
+  </div>
+  <div class="stack-list reveal">
+    <div class="stack-item open">
+      <div class="s-head"><span class="sn">01</span><span class="sname">AgFM-1 Foundation Model</span><span class="sbadge">Core IP</span><span class="sarrow">+</span></div>
+      <div class="s-body"><div class="s-body-inner"><div></div>
+        <div class="s-body-tech">The world's first multimodal AI foundation model trained exclusively on agricultural data. Soil composition, crop phenology, weather systems, equipment telemetry, satellite and hyperspectral imagery — unified into one model that understands your farm and acts on it faster than any operator can.</div>
+        <div class="s-body-farm"><div class="sfarm-lbl">What this means for you</div><p>Your tractor reads the field like your most experienced hand — adjusting depth, speed, and spacing in real time based on what it actually senses underfoot, not what the map says.</p></div>
+      </div></div>
+    </div>
+    <div class="stack-item">
+      <div class="s-head"><span class="sn">02</span><span class="sname">Full Sensor Suite & Perception</span><span class="sbadge">Prototyping</span><span class="sarrow">+</span></div>
+      <div class="s-body"><div class="s-body-inner"><div></div>
+        <div class="s-body-tech">Custom sensor fusion: LiDAR, multispectral cameras, RTK GNSS/IMU, ground-penetrating soil probes, and obstacle detection — all feeding AgFM-1 in real time so the machine understands what's happening above and below the soil simultaneously.</div>
+        <div class="s-body-farm"><div class="sfarm-lbl">What this means for you</div><p>It sees the waterway before you hit it. It knows a rock from a clod. It won't run into a deer at 2am — and it won't stop for shadows either.</p></div>
+      </div></div>
+    </div>
+    <div class="stack-item">
+      <div class="s-head"><span class="sn">03</span><span class="sname">Autonomous Tractor Agent</span><span class="sbadge">In Design</span><span class="sarrow">+</span></div>
+      <div class="s-body"><div class="s-body-inner"><div></div>
+        <div class="s-body-tech">Mission planning, adaptive path optimization, implement control, and in-field exception handling — all orchestrated by the agent layer on top of AgFM-1. The tractor reasons about its task end to end, from loading the planter to shutting down at the fence line.</div>
+        <div class="s-body-farm"><div class="sfarm-lbl">What this means for you</div><p>Set the field, choose the job, go to bed. Wake up to it done. No babysitting. No radio checks. No fatigue errors at hour 16.</p></div>
+      </div></div>
+    </div>
+    <div class="stack-item">
+      <div class="s-head"><span class="sn">04</span><span class="sname">ATC Tractor Platform</span><span class="sbadge">Design Phase</span><span class="sarrow">+</span></div>
+      <div class="s-body"><div class="s-body-inner"><div></div>
+        <div class="s-body-tech">Purpose-built chassis, drivetrain, and implement interface designed from the first principle that no human will ever sit in this seat. Optimized for sensor placement, compute power delivery, and serviceability in your shop with standard tools — no internet required.</div>
+        <div class="s-body-farm"><div class="sfarm-lbl">What this means for you</div><p>Built tough, built to maintain. Compatible with standard 3-point implements and PTO. Your existing planter, disc, and sprayer hook right up.</p></div>
+      </div></div>
+    </div>
+    <div class="stack-item">
+      <div class="s-head"><span class="sn">05</span><span class="sname">Fleet Intelligence & Farm Dashboard</span><span class="sbadge">Roadmap</span><span class="sarrow">+</span></div>
+      <div class="s-body"><div class="s-body-inner"><div></div>
+        <div class="s-body-tech">Remote oversight, fleet management, agronomic analytics, and continuous model updates delivered over-the-air. Every acre worked makes the model smarter — for you and every farmer on the network. A data flywheel no competitor can buy their way into.</div>
+        <div class="s-body-farm"><div class="sfarm-lbl">What this means for you</div><p>One simple app. Know where every machine is, what it's done, what it flagged. From your kitchen table or the co-op parking lot.</p></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<div class="numbers-band">
+  <div class="nb reveal"><div class="nb-v">1st</div><div class="nb-l">Foundation model built<br>exclusively for agriculture</div></div>
+  <div class="nb reveal d1"><div class="nb-v">40%</div><div class="nb-l">Reduction in per-acre<br>labor cost at scale</div></div>
+  <div class="nb reveal d2"><div class="nb-v">24/7</div><div class="nb-l">Operational uptime —<br>planting windows honored</div></div>
+  <div class="nb reveal d3"><div class="nb-v">5</div><div class="nb-l">Integrated stack layers<br>model to metal, all owned</div></div>
+</div>
+
+<!-- FOR FARMERS -->
+<section class="for-farmers" id="farmers">
+  <p class="stag reveal">For the American Farmer</p>
+  <h2 class="ff-h2 reveal">We didn't come from Silicon Valley. We came to <em>from fields.</em></h2>
+  <div class="ff-grid">
+    <div class="ff-card reveal">
+      <div class="ff-num">2x<sup>more acres</sup></div>
+      <div class="ff-title">Do More With What You Have</div>
+      <div class="ff-text">One ATC tractor working around the clock covers as much ground as two conventional operators. For farms stretched thin on labor, that's the difference between making the window and losing the season.</div>
+    </div>
+    <div class="ff-card reveal d1">
+      <div class="ff-num">$0<sup>driver cost</sup></div>
+      <div class="ff-title">Your Best Operator Never Calls In Sick</div>
+      <div class="ff-text">No overtime. No H-2A paperwork. No scrambling for help in April. The machine shows up every day, runs all night if the weather holds, and doesn't need a hot lunch or a day off.</div>
+    </div>
+    <div class="ff-card reveal d2">
+      <div class="ff-num">±1"<sup>precision</sup></div>
+      <div class="ff-title">Precision That Pays for Itself</div>
+      <div class="ff-text">Sub-inch GPS accuracy plus real-time soil sensing means less seed overlap, less input waste, and better stand counts. On 2,000 acres, that's real money — every single season.</div>
+    </div>
+  </div>
+  <div class="testimonial">
+    <div class="reveal">
+      <div class="t-quote">"I don't need a robot that texts me updates. I need one that works day in and day out."</div>
+      <div class="t-attr">— <strong>Kansas wheat & corn farmer</strong>, 4,800 acres · ATC field interviews, 2025</div>
+    </div>
+    <div class="t-right reveal d2">
+      <p>We heard this over and over across the country. Farmers don't want more apps. They don't want dashboards that buzz at 3am with alerts they can't do anything about. They want the work done — reliably, quietly, every time.</p>
+      <p style="margin-top:16px">That's the only product we're building. Invisible when it's working. Built to last a decade. Serviceable by any competent mechanic with a wrench and a parts catalog.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AMERICAN -->
+<section class="american">
+  <div>
+    <p class="stag reveal">Why American</p>
+    <h2 class="am-h2 reveal">Built here. <em>For here.</em></h2>
+    <p class="am-p reveal">American agriculture is a national security asset. We can't have the machines that grow our food dependent on foreign software, foreign supply chains, or foreign AI systems that report back to someone else.</p>
+    <p class="am-p reveal d1">American Tractor Company is building every layer of this stack domestically — from the compute module to the frame. Not because it's easier. Because it's the only way to build something that lasts and something farmers can trust.</p>
+    <div class="am-pillars reveal d2">
+      <div class="ap-item"><div class="ap-dot"></div><div class="ap-text">Manufactured in the United States</div></div>
+      <div class="ap-item"><div class="ap-dot"></div><div class="ap-text">Domestic steel and component supply chain</div></div>
+      <div class="ap-item"><div class="ap-dot"></div><div class="ap-text">AI training infrastructure owned and operated on US soil</div></div>
+      <div class="ap-item"><div class="ap-dot"></div><div class="ap-text">Serviceable with American-made parts available nationwide</div></div>
+      <div class="ap-item"><div class="ap-dot"></div><div class="ap-text">No foreign licensing or data agreements — ever</div></div>
+      <div class="ap-item"><div class="ap-dot"></div><div class="ap-text">Your farm data stays on your farm, full stop</div></div>
+    </div>
+  </div>
+  <div class="reveal d2">
+    <div class="flag-block">
+      <div class="flag-bg"></div>
+      <div class="flag-txt">
+        <p>American land.<br>American machines.<br><em>American intelligence.</em></p>
+        <small>American Tractor Co. · Est. 2025</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVEST -->
+<section class="invest" id="invest">
+  <div>
+    <p class="stag reveal">Get Involved</p>
+    <h2 class="inv-h2 reveal">We're building the next great <em>American company.</em></h2>
+    <p class="inv-p reveal">Whether you're a farmer who wants to be an early partner, an investor who sees what we see, or an engineer ready to work on the hardest problem in agriculture — we want to hear from you.</p>
+    <div class="inv-tabs reveal">
+      <button class="inv-tab active" onclick="switchTab(this,'investor')">Investor</button>
+      <button class="inv-tab" onclick="switchTab(this,'farmer')">Farmer Partner</button>
+      <button class="inv-tab" onclick="switchTab(this,'team')">Join the Team</button>
+    </div>
+    <div class="form-f reveal" id="formArea">
+      <input type="text" placeholder="Full name">
+      <input type="email" placeholder="Email address">
+      <div id="fi" style="display:flex;flex-direction:column;gap:12px">
+        <input type="text" placeholder="Fund or organization">
+        <input type="text" placeholder="Check size range (optional)">
+      </div>
+      <div id="ff" style="display:none;flex-direction:column;gap:12px">
+        <input type="text" placeholder="Farm name or operation">
+        <input type="text" placeholder="Acres operated">
+        <input type="text" placeholder="Primary crops (corn, wheat, soy…)">
+        <input type="text" placeholder="State / County">
+      </div>
+      <div id="ft" style="display:none;flex-direction:column;gap:12px">
+        <input type="text" placeholder="Your background or role">
+        <input type="text" placeholder="LinkedIn or GitHub URL">
+      </div>
+      <textarea placeholder="Anything else you'd like us to know?"></textarea>
+      <button class="form-sub" type="button">Send Introduction →</button>
+    </div>
+  </div>
+  <div>
+    <div class="inv-why-lbl reveal">Why invest in ATC</div>
+    <div class="inv-points reveal">
+      <div class="inv-pt"><span class="ip-ic">⊕</span><div><div class="ip-t">Category-defining timing</div><p class="ip-p">Foundation models just crossed the threshold of practical utility. Agriculture hasn't been touched yet. We're the first serious team to show up with the right approach at the right moment.</p></div></div>
+      <div class="inv-pt"><span class="ip-ic">⊕</span><div><div class="ip-t">Defensible from day one</div><p class="ip-p">Every acre worked by an ATC tractor makes AgFM-1 smarter. A compounding data moat that gets wider with every growing season — no competitor can buy their way into it.</p></div></div>
+      <div class="inv-pt"><span class="ip-ic">⊕</span><div><div class="ip-t">Full-stack ownership</div><p class="ip-p">We own the model, tractor, sensors, and data. The Tesla model applied to agriculture — margin at every layer, no dependency on anyone else's platform or pricing.</p></div></div>
+      <div class="inv-pt"><span class="ip-ic">⊕</span><div><div class="ip-t">A market that has to change</div><p class="ip-p">Farm labor shortage is structural, not cyclical. US food security demands domestic automation. Policy tailwinds, bipartisan support, and a $180B equipment market ready to flip.</p></div></div>
+    </div>
+    <div class="mkt-box reveal d2">
+      <div class="mkt-lbl">Market Opportunity</div>
+      <div class="mkt-row"><span class="mr-l">US Farm Equipment (TAM)</span><span class="mr-v">$180B</span></div>
+      <div class="mkt-row"><span class="mr-l">Precision Ag Software (SAM)</span><span class="mr-v">$11B</span></div>
+      <div class="mkt-row"><span class="mr-l">Ag Autonomy — current leaders</span><span class="mr-v">~$0</span></div>
+      <div class="mkt-row"><span class="mr-l">ATC Serviceable Market (Year 5)</span><span class="mr-v">$4B+</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="fb">American Tractor Company</div>
+      <p class="fd">Building the world's first agricultural AI foundation model and the autonomous tractor platform that runs on it. From the ground up. Made in America.</p>
+    </div>
+    <div><div class="fc-h">Company</div><ul class="fl"><li><a href="#problem">The Problem</a></li><li><a href="#solution">Technology</a></li><li><a href="#farmers">For Farmers</a></li><li><a href="#invest">Investors</a></li></ul></div>
+    <div><div class="fc-h">Technology</div><ul class="fl"><li><a href="#">AgFM-1 Model</a></li><li><a href="#">Perception Platform</a></li><li><a href="#">Autonomous Agent</a></li><li><a href="#">Fleet Intelligence</a></li></ul></div>
+    <div><div class="fc-h">Contact</div><ul class="fl"><li><a href="mailto:hello@americantractor.co">hello@americantractor.co</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">X / Twitter</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li></ul></div>
+  </div>
+  <div class="ft-bot">
+    <span class="fc">© 2025 American Tractor Company. All rights reserved.</span>
+    <span class="fm">Made in America</span>
+    <span class="fbadge">AgFM-1 · Coming 2026</span>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function r(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(r);})();
+document.querySelectorAll('a,button,.stack-item,.ff-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='14px';cur.style.height='14px';curR.style.width='44px';curR.style.height='44px';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';curR.style.width='28px';curR.style.height='28px';});
+});
+
+/* NAV */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+
+/* FIELD ROWS */
+const fc=document.getElementById('fieldCanvas');
+for(let i=0;i<14;i++){const t=i/14,s=18+t*82,b=t*98;const d=document.createElement('div');d.style.cssText=`position:absolute;bottom:${b}%;left:${50-s}%;right:${50-s}%;height:1px;background:rgba(200,162,84,${.02+t*.07});`;fc.appendChild(d);}
+
+/* STACK ACCORDION */
+document.querySelectorAll('.stack-item').forEach(item=>{
+  item.querySelector('.s-head').addEventListener('click',()=>{
+    const was=item.classList.contains('open');
+    document.querySelectorAll('.stack-item').forEach(i=>i.classList.remove('open'));
+    if(!was)item.classList.add('open');
+  });
+});
+
+/* TABS */
+function switchTab(btn,type){
+  document.querySelectorAll('.inv-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fi').style.display=type==='investor'?'flex':'none';
+  document.getElementById('ff').style.display=type==='farmer'?'flex':'none';
+  document.getElementById('ft').style.display=type==='team'?'flex':'none';
+}
+
+/* SCROLL REVEAL */
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
