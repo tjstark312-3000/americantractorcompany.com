@@ -170,6 +170,18 @@
   .inv-h2 { font-family:'DM Serif Display',serif;font-size:clamp(34px,3.6vw,58px);line-height:1.06;letter-spacing:-.02em;margin-bottom:22px; }
   .inv-h2 em { font-style:italic;color:var(--grain); }
   .inv-p { font-size:15px;line-height:1.76;color:rgba(248,243,235,.52);margin-bottom:14px; }
+  .inv-tabs { display:flex;margin:36px 0 28px;border:1px solid rgba(200,162,84,.15); }
+  .inv-tab { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:12px 22px;cursor:pointer;transition:all .2s;flex:1;text-align:center;border:none;background:none; }
+  .inv-tab.active { background:var(--grain);color:var(--soil); }
+  .form-f { display:flex;flex-direction:column;gap:12px; }
+  .form-f input,.form-f select,.form-f textarea { background:rgba(255,255,255,.04);border:1px solid rgba(200,162,84,.13);color:var(--white);font-family:'Instrument Sans',sans-serif;font-size:14px;padding:14px 17px;outline:none;transition:border-color .2s;width:100%; }
+  .form-f input::placeholder,.form-f textarea::placeholder { color:var(--dim); }
+  .form-f input:focus,.form-f textarea:focus { border-color:rgba(200,162,84,.5); }
+  .form-f textarea { resize:vertical;min-height:90px; }
+  .form-f select { color:var(--dim); }
+  .form-f select option { background:var(--earth);color:var(--white); }
+  .form-sub { font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--soil);background:var(--grain);padding:15px 30px;border:none;cursor:pointer;align-self:flex-start;transition:background .2s; }
+  .form-sub:hover { background:var(--wheat); }
   .inv-why-lbl { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--grain);opacity:.7;margin-bottom:26px; }
   .inv-points { display:flex;flex-direction:column; }
   .inv-pt { display:grid;grid-template-columns:22px 1fr;gap:18px;padding:22px 0;border-bottom:1px solid rgba(200,162,84,.08); }
@@ -477,6 +489,31 @@
     <p class="stag reveal">Get Involved</p>
     <h2 class="inv-h2 reveal">We're building the next great <em>American company.</em></h2>
     <p class="inv-p reveal">Whether you're a farmer who wants to be an early partner, an investor who sees what we see, or an engineer ready to work on the hardest problem in agriculture — we want to hear from you.</p>
+    <div class="inv-tabs reveal">
+      <button class="inv-tab active" onclick="switchTab(this,'investor')">Investor</button>
+      <button class="inv-tab" onclick="switchTab(this,'farmer')">Farmer Partner</button>
+      <button class="inv-tab" onclick="switchTab(this,'team')">Join the Team</button>
+    </div>
+    <div class="form-f reveal" id="formArea">
+      <input id="introName" type="text" placeholder="Full name">
+      <input id="introEmail" type="email" placeholder="Email address">
+      <div id="fi" style="display:flex;flex-direction:column;gap:12px">
+        <input id="investorOrg" type="text" placeholder="Fund or organization">
+        <input id="investorCheckSize" type="text" placeholder="Check size range (optional)">
+      </div>
+      <div id="ff" style="display:none;flex-direction:column;gap:12px">
+        <input id="partnerFarmName" type="text" placeholder="Farm name or operation">
+        <input id="partnerAcres" type="text" placeholder="Acres operated">
+        <input id="partnerCrops" type="text" placeholder="Primary crops (corn, wheat, soy...)">
+        <input id="partnerLocation" type="text" placeholder="State / County">
+      </div>
+      <div id="ft" style="display:none;flex-direction:column;gap:12px">
+        <input id="teamBackground" type="text" placeholder="Your background or role">
+        <input id="teamProfile" type="text" placeholder="LinkedIn or GitHub URL">
+      </div>
+      <textarea id="introNotes" placeholder="Anything else you'd like us to know?"></textarea>
+      <button class="form-sub" id="sendIntroduction" type="button">Send Introduction →</button>
+    </div>
   </div>
   <div>
     <div class="inv-why-lbl reveal">Why invest in ATC</div>
@@ -540,6 +577,64 @@ document.querySelectorAll('.stack-item').forEach(item=>{
     if(!was)item.classList.add('open');
   });
 });
+
+/* TABS */
+let introType='investor';
+const introRecipients={
+  investor:'investor@americantractorcomapny.com',
+  farmer:'partner@americantractorcompany.com',
+  team:'career@americantractorcompany.com'
+};
+
+function switchTab(btn,type){
+  introType=type;
+  document.querySelectorAll('.inv-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fi').style.display=type==='investor'?'flex':'none';
+  document.getElementById('ff').style.display=type==='farmer'?'flex':'none';
+  document.getElementById('ft').style.display=type==='team'?'flex':'none';
+}
+
+function sendIntroduction(){
+  const baseFields=[
+    ['Full name',document.getElementById('introName').value],
+    ['Email address',document.getElementById('introEmail').value]
+  ];
+  const typeFields={
+    investor:[
+      ['Fund or organization',document.getElementById('investorOrg').value],
+      ['Check size range (optional)',document.getElementById('investorCheckSize').value]
+    ],
+    farmer:[
+      ['Farm name or operation',document.getElementById('partnerFarmName').value],
+      ['Acres operated',document.getElementById('partnerAcres').value],
+      ['Primary crops',document.getElementById('partnerCrops').value],
+      ['State / County',document.getElementById('partnerLocation').value]
+    ],
+    team:[
+      ['Background or role',document.getElementById('teamBackground').value],
+      ['LinkedIn or GitHub URL',document.getElementById('teamProfile').value]
+    ]
+  };
+  const notes=document.getElementById('introNotes').value.trim();
+  const bodyLines=[...baseFields,...typeFields[introType]]
+    .filter(([,value])=>value.trim())
+    .map(([label,value])=>`${label}: ${value.trim()}`);
+
+  if(notes)bodyLines.push('',`Anything else you'd like us to know?: ${notes}`);
+
+  const subjectByType={
+    investor:'ATC Investor Introduction',
+    farmer:'ATC Farmer Partner Introduction',
+    team:'ATC Career Introduction'
+  };
+  const subject=encodeURIComponent(subjectByType[introType]);
+  const body=encodeURIComponent(bodyLines.join('\n'));
+
+  window.location.href=`mailto:${introRecipients[introType]}?subject=${subject}&body=${body}`;
+}
+
+document.getElementById('sendIntroduction').addEventListener('click',sendIntroduction);
 
 /* SCROLL REVEAL */
 const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.08});
