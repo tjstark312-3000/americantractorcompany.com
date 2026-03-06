@@ -170,18 +170,6 @@
   .inv-h2 { font-family:'DM Serif Display',serif;font-size:clamp(34px,3.6vw,58px);line-height:1.06;letter-spacing:-.02em;margin-bottom:22px; }
   .inv-h2 em { font-style:italic;color:var(--grain); }
   .inv-p { font-size:15px;line-height:1.76;color:rgba(248,243,235,.52);margin-bottom:14px; }
-  .inv-tabs { display:flex;margin:36px 0 28px;border:1px solid rgba(200,162,84,.15); }
-  .inv-tab { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:12px 22px;cursor:pointer;transition:all .2s;flex:1;text-align:center;border:none;background:none; }
-  .inv-tab.active { background:var(--grain);color:var(--soil); }
-  .form-f { display:flex;flex-direction:column;gap:12px; }
-  .form-f input,.form-f select,.form-f textarea { background:rgba(255,255,255,.04);border:1px solid rgba(200,162,84,.13);color:var(--white);font-family:'Instrument Sans',sans-serif;font-size:14px;padding:14px 17px;outline:none;transition:border-color .2s;width:100%; }
-  .form-f input::placeholder,.form-f textarea::placeholder { color:var(--dim); }
-  .form-f input:focus,.form-f textarea:focus { border-color:rgba(200,162,84,.5); }
-  .form-f textarea { resize:vertical;min-height:90px; }
-  .form-f select { color:var(--dim); }
-  .form-f select option { background:var(--earth);color:var(--white); }
-  .form-sub { font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--soil);background:var(--grain);padding:15px 30px;border:none;cursor:pointer;align-self:flex-start;transition:background .2s; }
-  .form-sub:hover { background:var(--wheat); }
   .inv-why-lbl { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--grain);opacity:.7;margin-bottom:26px; }
   .inv-points { display:flex;flex-direction:column; }
   .inv-pt { display:grid;grid-template-columns:22px 1fr;gap:18px;padding:22px 0;border-bottom:1px solid rgba(200,162,84,.08); }
@@ -198,7 +186,7 @@
 
   /* FOOTER */
   footer { background:var(--soil);border-top:1px solid rgba(200,162,84,.1);padding:76px 60px 52px; }
-  .ft-top { display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr;gap:56px;margin-bottom:60px; }
+  .ft-top { display:grid;grid-template-columns:2.4fr 1fr 1fr;gap:56px;margin-bottom:60px; }
   .fb { font-family:'DM Serif Display',serif;font-size:24px;color:var(--grain);letter-spacing:-.01em;margin-bottom:14px; }
   .fd { font-size:14px;line-height:1.7;color:var(--muted);max-width:280px; }
   .fc-h { font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--grain);opacity:.65;margin-bottom:18px; }
@@ -489,31 +477,6 @@
     <p class="stag reveal">Get Involved</p>
     <h2 class="inv-h2 reveal">We're building the next great <em>American company.</em></h2>
     <p class="inv-p reveal">Whether you're a farmer who wants to be an early partner, an investor who sees what we see, or an engineer ready to work on the hardest problem in agriculture — we want to hear from you.</p>
-    <div class="inv-tabs reveal">
-      <button class="inv-tab active" onclick="switchTab(this,'investor')">Investor</button>
-      <button class="inv-tab" onclick="switchTab(this,'farmer')">Farmer Partner</button>
-      <button class="inv-tab" onclick="switchTab(this,'team')">Join the Team</button>
-    </div>
-    <div class="form-f reveal" id="formArea">
-      <input type="text" placeholder="Full name">
-      <input type="email" placeholder="Email address">
-      <div id="fi" style="display:flex;flex-direction:column;gap:12px">
-        <input type="text" placeholder="Fund or organization">
-        <input type="text" placeholder="Check size range (optional)">
-      </div>
-      <div id="ff" style="display:none;flex-direction:column;gap:12px">
-        <input type="text" placeholder="Farm name or operation">
-        <input type="text" placeholder="Acres operated">
-        <input type="text" placeholder="Primary crops (corn, wheat, soy…)">
-        <input type="text" placeholder="State / County">
-      </div>
-      <div id="ft" style="display:none;flex-direction:column;gap:12px">
-        <input type="text" placeholder="Your background or role">
-        <input type="text" placeholder="LinkedIn or GitHub URL">
-      </div>
-      <textarea placeholder="Anything else you'd like us to know?"></textarea>
-      <button class="form-sub" type="button">Send Introduction →</button>
-    </div>
   </div>
   <div>
     <div class="inv-why-lbl reveal">Why invest in ATC</div>
@@ -540,9 +503,8 @@
       <div class="fb">American Tractor Company</div>
       <p class="fd">Building the world's first agricultural AI foundation model and the autonomous tractor platform that runs on it. From the ground up. Made in America.</p>
     </div>
-    <div><div class="fc-h">Company</div><ul class="fl"><li><a href="#problem">The Problem</a></li><li><a href="#solution">Technology</a></li><li><a href="#farmers">For Farmers</a></li><li><a href="#invest">Investors</a></li></ul></div>
-    <div><div class="fc-h">Technology</div><ul class="fl"><li><a href="#">AgFM-1 Model</a></li><li><a href="#">Perception Platform</a></li><li><a href="#">Autonomous Agent</a></li><li><a href="#">Fleet Intelligence</a></li></ul></div>
-    <div><div class="fc-h">Contact</div><ul class="fl"><li><a href="mailto:hello@americantractor.co">hello@americantractor.co</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">X / Twitter</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li></ul></div>
+    <div><div class="fc-h">Company</div><ul class="fl"><li><a href="#problem">The Problem</a></li><li><a href="#farmers">For Farmers</a></li><li><a href="#invest">Investors</a></li></ul></div>
+    <div><div class="fc-h">Contact</div><ul class="fl"><li><a href="mailto:hello@americantractor.co">hello@americantractor.co</a></li></ul></div>
   </div>
   <div class="ft-bot">
     <span class="fc">© 2025 American Tractor Company. All rights reserved.</span>
@@ -578,15 +540,6 @@ document.querySelectorAll('.stack-item').forEach(item=>{
     if(!was)item.classList.add('open');
   });
 });
-
-/* TABS */
-function switchTab(btn,type){
-  document.querySelectorAll('.inv-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('fi').style.display=type==='investor'?'flex':'none';
-  document.getElementById('ff').style.display=type==='farmer'?'flex':'none';
-  document.getElementById('ft').style.display=type==='team'?'flex':'none';
-}
 
 /* SCROLL REVEAL */
 const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.08});
