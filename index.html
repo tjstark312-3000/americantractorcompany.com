@@ -31,10 +31,13 @@
   /* NAV */
   nav { position:fixed;top:0;left:0;right:0;z-index:200;padding:22px 60px;display:flex;justify-content:space-between;align-items:center;transition:background .4s; }
   nav.scrolled { background:rgba(16,13,6,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,162,84,.1); }
-  .logo { display:flex;align-items:center;gap:14px;text-decoration:none; }
-  .logo-mark { width:34px;height:34px;border:1px solid rgba(200,162,84,.45);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
-  .logo-text { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--wheat);line-height:1.4; }
-  .logo-text span { display:block;color:var(--grain);font-size:8.5px;letter-spacing:.22em;margin-top:1px; }
+  .logo { display:flex;align-items:center;gap:16px;text-decoration:none; }
+  .logo-mark { width:78px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .logo-mark svg { width:100%;height:100%;display:block;filter:drop-shadow(0 0 16px rgba(200,162,84,.14)); }
+  .logo-lockup { display:flex;flex-direction:column;gap:2px; }
+  .logo-line { font-family:'Instrument Sans',sans-serif;font-size:clamp(15px,1.1vw,22px);font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:.86;white-space:nowrap;color:var(--wheat); }
+  .logo-line:last-child { color:var(--grain); }
+  .logo-line .co { color:var(--straw); }
   .nav-links { display:flex;gap:40px; }
   .nav-links a { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--wheat);opacity:.5;text-decoration:none;transition:opacity .2s; }
   .nav-links a:hover { opacity:1; }
@@ -214,13 +217,24 @@
 <nav id="nav">
   <a href="#" class="logo">
     <div class="logo-mark">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="rgba(200,162,84,.8)" stroke-width="1.2">
-        <circle cx="9" cy="9" r="7"/>
-        <path d="M9 2 L9 16 M2 9 L16 9"/>
-        <circle cx="9" cy="9" r="2.5" fill="rgba(200,162,84,.25)"/>
+      <svg viewBox="0 0 210 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="logoFill" x1="18" y1="12" x2="178" y2="126" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F2E8CC"/>
+            <stop offset="0.48" stop-color="#E6D09A"/>
+            <stop offset="1" stop-color="#C8A254"/>
+          </linearGradient>
+        </defs>
+        <path d="M82 4H150L206 96L166 136H26L44 108H123L139 88H60L0 88L36 40H67L82 4Z" fill="url(#logoFill)" fill-opacity=".96"/>
+        <path d="M84 30L56 68H142L116 30H84Z" fill="#100D06"/>
+        <path d="M55 92H138L120 116H38L55 92Z" fill="#100D06"/>
+        <path d="M82 4H150L206 96L166 136H26L44 108H123L139 88H60L0 88L36 40H67L82 4Z" stroke="rgba(242,232,204,.32)" stroke-width="3" stroke-linejoin="round"/>
       </svg>
     </div>
-    <div class="logo-text">American Tractor Co.<span>AgFM-1 · Autonomous Platform</span></div>
+    <div class="logo-lockup">
+      <div class="logo-line">American</div>
+      <div class="logo-line">Tractor <span class="co">Co.</span></div>
+    </div>
   </a>
   <div class="nav-links">
     <a href="#problem">The Problem</a>
