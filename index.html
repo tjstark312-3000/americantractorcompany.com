@@ -31,8 +31,9 @@
   /* NAV */
   nav { position:fixed;top:0;left:0;right:0;z-index:200;padding:22px clamp(24px,5vw,60px);display:flex;justify-content:space-between;align-items:center;gap:32px;transition:background .4s; }
   nav.scrolled { background:rgba(16,13,6,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,162,84,.1); }
-  .logo { display:flex;align-items:center;gap:9px;text-decoration:none; }
+  .logo { display:flex;align-items:center;gap:9px;text-decoration:none;min-width:0; }
   .logo-mark { width:64px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .logo-mark img { width:100%;height:100%;display:block; }
   .logo-mark svg { width:100%;height:100%;display:block; }
   .logo-lockup { display:flex;flex-direction:column;gap:6px;min-width:0; }
   .logo-line { font-family:'Archivo Black',sans-serif;font-size:clamp(13px,1.05vw,20px);letter-spacing:.015em;text-transform:uppercase;line-height:.8;white-space:nowrap;color:var(--straw); }
@@ -302,10 +303,7 @@
 <nav id="nav">
   <a href="#" class="logo">
     <div class="logo-mark">
-      <svg viewBox="0 0 284 281" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" shape-rendering="geometricPrecision">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M58 116L112 14H164L283 164L237 226L128 116H58ZM141 76L103 140H179L141 76Z" fill="#F2E8CC"/>
-        <path d="M0 260H67L95 226H237L283 164H49L0 260Z" fill="#F2E8CC"/>
-      </svg>
+      <img src="assets/atc-mark.png" alt="" aria-hidden="true">
     </div>
     <div class="logo-lockup">
       <div class="logo-line">American</div>
