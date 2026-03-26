@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>American Tractor Company — Confidential</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&family=Barlow+Condensed:wght@300;400;500;600&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   EXACT SITE PALETTE (from screenshots)
+   BG:    #0D0B07  warm olive-black
+   TEXT:  #EDE8D5  warm cream
+   GOLD:  #C49A2A  burnished gold
+   BLUE:  #4A6A8E  dusty steel blue (hero highlight)
+   MUTED: #6B6450  olive muted
+   BORDER:#2A2618  dark olive border
+═══════════════════════════════════════ */
+:root {
+  --bg:     #0D0B07;
+  --bg1:    #131108;
+  --bg2:    #1A180E;
+  --cream:  #EDE8D5;
+  --gold:   #C49A2A;
+  --gold-l: #D4AE4A;
+  --gold-d: #8A6C1A;
+  --blue:   #4A6A8E;
+  --muted:  #6B6450;
+  --faint:  rgba(237,232,213,.06);
+  --border: #2A2618;
+  --border2:#3A3422;
+
+  --serif: 'Playfair Display', Georgia, serif;
+  --cond:  'Barlow Condensed', sans-serif;
+  --body:  'Barlow', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--cream); }
+
+/* ─── DECK SHELL ─── */
+.deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+/* ─── SLIDES ─── */
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity .45s ease, transform .45s ease;
+  transform: translateY(12px);
+  overflow: hidden;
+}
+.slide.active  { opacity: 1; pointer-events: all; transform: none; }
+.slide.out     { opacity: 0; transform: translateY(-12px); }
+
+/* ─── CHROME ─── */
+.chrome { position: fixed; inset: 0; pointer-events: none; z-index: 200; }
+
+/* Logo — matches site exactly */
+.chrome-logo {
+  position: absolute; top: 28px; left: 28px;
+  display: flex; align-items: center; gap: 9px;
+  pointer-events: all;
+  min-width: 230px;
+  z-index: 2;
+}
+.chrome-logo-mark {
+  width: 64px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.chrome-logo-mark img {
+  width: 100%; height: 100%; display: block;
+}
+.chrome-logo-lockup {
+  display: flex; flex-direction: column; gap: 6px; min-width: 0;
+}
+.chrome-logo-line {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(13px, 1.05vw, 20px);
+  letter-spacing: .015em;
+  text-transform: uppercase;
+  line-height: .8;
+  white-space: nowrap;
+  color: #F2E8CC;
+}
+.chrome-logo-line .co {
+  color: #F2E8CC;
+}
+
+/* Bottom nav */
+.chrome-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 28px; padding: 22px;
+  pointer-events: all;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.nav-btn {
+  background: none; border: 1px solid var(--border2);
+  color: var(--muted); cursor: pointer;
+  width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; transition: color .2s, border-color .2s;
+}
+.nav-btn:hover { color: var(--cream); border-color: var(--gold); }
+.slide-dots { display: flex; gap: 8px; align-items: center; }
+.sdot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--border2); cursor: pointer;
+  border: none; padding: 0; transition: background .25s, transform .25s;
+}
+.sdot.active { background: var(--gold); transform: scale(1.5); }
+
+/* Key hint */
+.chrome-hint {
+  position: absolute; bottom: 26px; right: 40px;
+  font-family: var(--cond); font-size: .58rem; letter-spacing: .16em;
+  color: rgba(107,100,80,.5);
+}
+
+/* ─── SLIDE BODY ─── */
+.sbody {
+  position: absolute; inset: 0;
+  padding: 120px 80px 88px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.sbody.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  padding: 0; gap: 0;
+}
+.sbody.pad-less { padding-top: 100px; }
+
+/* ─── LABEL (matches site "THE PROBLEM" style) ─── */
+.label {
+  font-family: var(--cond); font-size: .6rem; font-weight: 500;
+  letter-spacing: .28em; text-transform: uppercase; color: var(--gold);
+  margin-bottom: 24px;
+}
+
+/* ─── HEADLINES ─── */
+.h-hero {
+  font-family: var(--serif); font-weight: 900;
+  font-size: clamp(3rem, 5.8vw, 6.2rem);
+  line-height: 1.0; color: var(--cream);
+}
+.h-hero em  { color: var(--gold); font-style: italic; }
+.h-hero .blue-hl {
+  background: var(--blue); color: var(--cream);
+  padding: 0 6px; display: inline; font-style: normal;
+}
+
+.h-section {
+  font-family: var(--serif); font-weight: 800;
+  font-size: clamp(2.4rem, 4vw, 4.4rem);
+  line-height: 1.06; color: var(--cream);
+}
+.h-section em  { color: var(--gold); font-style: italic; }
+.h-section del { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(107,100,80,.5); }
+
+/* ─── BODY TEXT ─── */
+.body-sm { font-family: var(--body); font-size: .9rem; font-weight: 300; color: var(--muted); line-height: 1.7; }
+
+/* ─── STAT BLOCK (matches site's "43% / $180B / 24/7" style) ─── */
+.stat-row { display: flex; gap: 0; }
+.stat-block { padding: 0 40px 0 0; border-right: 1px solid var(--border2); margin-right: 40px; }
+.stat-block:last-child { border-right: none; margin-right: 0; }
+.stat-n { font-family: var(--serif); font-weight: 800; font-size: clamp(2.2rem,4vw,3.8rem); color: var(--gold); line-height: 1; }
+.stat-l { font-family: var(--cond); font-size: .6rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-top: 8px; line-height: 1.4; }
+
+/* ─── CELLS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1px; background: var(--border); }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); }
+.cell { background: var(--bg1); padding: 36px 32px; }
+.cell.gold-bg { background: rgba(196,154,42,.07); border: 1px solid rgba(196,154,42,.2); }
+.cell-num {
+  font-family: var(--serif); font-weight: 800;
+  font-size: clamp(2.5rem, 4vw, 3.6rem); line-height: 1; color: var(--gold);
+}
+.cell-num.red { color: #C87060; }
+.cell-title {
+  font-family: var(--cond); font-size: .7rem; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--cream); margin: 10px 0 8px;
+}
+.cell-body { font-family: var(--body); font-size: .8rem; font-weight: 300; color: var(--muted); line-height: 1.65; }
+.cell-tag {
+  display: inline-block; margin-top: 12px;
+  font-family: var(--cond); font-size: .6rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gold); border: 1px solid rgba(196,154,42,.35); padding: 4px 10px;
+}
+
+/* ─── ACCORDION STYLE (matches site's tech list) ─── */
+.acc-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0; border-bottom: 1px solid var(--border);
+}
+.acc-num { font-family: var(--cond); font-size: .65rem; color: var(--muted); margin-right: 24px; letter-spacing: .08em; }
+.acc-title { font-family: var(--serif); font-size: 1.15rem; font-weight: 700; color: var(--cream); }
+.acc-badge {
+  font-family: var(--cond); font-size: .6rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  border: 1px solid var(--border2); color: var(--muted); padding: 5px 12px;
+}
+.acc-badge.gold { color: var(--gold); border-color: rgba(196,154,42,.4); }
+
+/* ─── QUOTE BLOCK (matches site style) ─── */
+.quote-block {
+  border-left: 3px solid var(--gold);
+  padding: 4px 0 4px 24px; margin: 24px 0;
+}
+.quote-text {
+  font-family: var(--serif); font-size: 1.1rem; font-style: italic;
+  color: var(--cream); line-height: 1.55; font-weight: 700;
+}
+.quote-attr {
+  font-family: var(--cond); font-size: .6rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-top: 10px;
+}
+
+/* ─── TIMELINE ─── */
+.tl-item { display: grid; grid-template-columns: 72px 1fr; gap: 16px; }
+.tl-date { font-family: var(--cond); font-size: .62rem; font-weight: 500; letter-spacing: .1em; color: var(--muted); text-align: right; padding-top: 4px; }
+.tl-body { padding-bottom: 22px; border-left: 1px solid var(--border2); padding-left: 18px; position: relative; }
+.tl-body::before { content: ''; position: absolute; left: -5px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); border: 2px solid var(--bg); }
+.tl-body.dim::before { background: var(--muted); }
+.tl-title { font-family: var(--serif); font-size: .95rem; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+.tl-desc  { font-family: var(--body); font-size: .78rem; font-weight: 300; color: var(--muted); line-height: 1.55; }
+
+/* ─── TEAM CELL ─── */
+.tc { background: var(--bg1); padding: 26px 28px; display: grid; grid-template-columns: 42px 1fr; gap: 14px; border-bottom: 1px solid var(--border); }
+.tc-init {
+  width: 42px; height: 42px; flex-shrink: 0;
+  font-family: var(--serif); font-size: .9rem; font-weight: 800; color: var(--gold);
+  border: 1px solid rgba(196,154,42,.3); display: flex; align-items: center; justify-content: center;
+  background: rgba(196,154,42,.06);
+}
+.tc-name { font-family: var(--serif); font-size: .95rem; font-weight: 700; color: var(--cream); }
+.tc-role { font-family: var(--cond); font-size: .6rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin: 3px 0 6px; }
+.tc-bio  { font-family: var(--body); font-size: .78rem; font-weight: 300; color: var(--muted); line-height: 1.55; }
+.tc-from { font-family: var(--cond); font-size: .65rem; color: rgba(107,100,80,.6); margin-top: 4px; letter-spacing: .04em; }
+
+/* ─── USE OF FUNDS ─── */
+.use-row { display: flex; align-items: center; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+.use-lbl { font-family: var(--body); font-size: .83rem; font-weight: 300; color: var(--muted); flex: 1; }
+.use-track { width: 110px; height: 2px; background: var(--border2); flex-shrink: 0; }
+.use-fill  { height: 100%; background: var(--gold); animation: growX 1s ease both; }
+.use-pct   { font-family: var(--serif); font-size: .9rem; font-weight: 700; color: var(--cream); width: 40px; text-align: right; flex-shrink: 0; }
+
+/* ─── SPLIT (before/after) ─── */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); margin-top: 40px; }
+.split-side { background: var(--bg1); padding: 40px 38px; }
+.split-side.faded { opacity: .35; }
+.split-side.lit { position: relative; }
+.split-side.lit::before {
+  content: 'NOW'; position: absolute; top: 16px; right: 18px;
+  font-family: var(--cond); font-size: .58rem; font-weight: 600; letter-spacing: .2em;
+  color: var(--gold); border: 1px solid rgba(196,154,42,.4); padding: 3px 8px;
+}
+.split-h { font-family: var(--serif); font-size: 1.6rem; font-weight: 800; color: var(--cream); margin-bottom: 22px; line-height: 1.15; }
+.split-list { list-style: none; }
+.split-list li { font-family: var(--body); font-size: .83rem; font-weight: 300; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; line-height: 1.5; }
+.split-list li .mk { flex-shrink: 0; font-size: .75rem; margin-top: 1px; }
+.split-list.cross li .mk { color: #C07060; }
+.split-list.check li .mk { color: var(--gold); }
+
+/* ─── TAM BARS ─── */
+.tam-row { margin-bottom: 16px; }
+.tam-lbl-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.tam-name { font-family: var(--cond); font-size: .68rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.tam-val  { font-family: var(--serif); font-size: 1.05rem; font-weight: 700; color: var(--cream); }
+.tam-track { height: 2px; background: var(--border2); }
+.tam-fill  { height: 100%; background: var(--gold); animation: growX 1.1s ease both; }
+
+/* ─── CONTACT ─── */
+.contact-row { display: flex; align-items: baseline; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.contact-lbl { font-family: var(--cond); font-size: .6rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); width: 54px; flex-shrink: 0; }
+.contact-val { font-family: var(--body); font-size: .84rem; font-weight: 300; color: var(--cream); }
+.contact-val a { color: var(--gold); text-decoration: none; }
+
+/* ─── STACK NETWORK SLIDE ─── */
+.stack-layout {
+  position: relative;
+  height: 100%;
+  display: block;
+}
+.stack-copy {
+  position: absolute;
+  top: 88px;
+  left: 64px;
+  z-index: 10;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+.stack-techline {
+  margin-top: 18px;
+  font-family: var(--cond);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(237,232,213,.52);
+  line-height: 1.7;
+}
+.stack-layers {
+  margin-top: 22px;
+  border: 1px solid var(--border);
+  background: var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+}
+.stack-layer {
+  display: block;
+  padding: 12px 12px 13px;
+  border-bottom: none;
+  background: linear-gradient(180deg, rgba(19,17,8,.96), rgba(13,11,7,.98));
+  min-height: 96px;
+}
+.stack-layer-num {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+.stack-layer-title {
+  margin-top: 4px;
+  font-family: var(--cond);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+.stack-layer-desc {
+  margin-top: 8px;
+  font-family: var(--body);
+  font-size: .63rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.stack-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.stack-mesh {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.stack-plane {
+  fill: none;
+  stroke: none;
+}
+.stack-contour {
+  fill: none;
+  stroke: rgba(255,255,255,.2);
+  stroke-width: .8;
+}
+.stack-link {
+  fill: none;
+  stroke: rgba(255,255,255,.65);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 6;
+  animation: dash-f 5s linear infinite;
+}
+.stack-link.soft { opacity: .35; }
+.stack-link.gold { stroke: rgba(196,154,42,.9); }
+.stack-tractor {
+  fill: none;
+  stroke: rgba(255,255,255,.5);
+  stroke-width: 1.1;
+  filter: url(#stackGlow);
+}
+.stack-drone-line,
+.stack-sat-line,
+.stack-sensor-line {
+  fill: none;
+  stroke: rgba(255,255,255,.45);
+}
+.stack-drone-line { stroke-width: .9; }
+.stack-sat-line { stroke-width: .9; }
+.stack-sensor-line { stroke-width: 1; }
+.stack-node-dot {
+  fill: rgba(77,215,187,1);
+  filter: url(#stackGlowLg);
+}
+.stack-pill {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 14px;
+  border-radius: 7px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(4,7,14,.9);
+  box-shadow: 0 12px 32px rgba(0,0,0,.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.stack-pill .sig {
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stack-pill .sig::before { display: none; }
+.stack-pill .txt {
+  font-family: var(--cond);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.92);
+  white-space: nowrap;
+}
+.stack-pill.satellite { top: 8%; left: 50%; transform: translateX(-50%); }
+.stack-pill.drone     { top: 26%; left: 8%; }
+.stack-pill.tractor   { top: 50%; left: 44%; transform: translateX(-50%); }
+.stack-pill.sensor    { top: 72%; left: 11%; }
+.stack-pill.dashboard { top: 34%; right: 6%; }
+.stack-core {
+  position: absolute;
+  left: 43%;
+  top: 58%;
+  transform: translate(-50%, -50%);
+  width: 158px;
+  padding: 12px 14px;
+  border: 1px solid rgba(196,154,42,.3);
+  background: rgba(4,7,14,.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 24px 50px rgba(0,0,0,.6);
+  z-index: 8;
+}
+.stack-core-kicker {
+  font-family: var(--cond);
+  font-size: .54rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.stack-core-title {
+  margin-top: 6px;
+  font-family: var(--body);
+  font-size: .98rem;
+  font-weight: 600;
+  color: var(--cream);
+}
+.stack-core-copy {
+  margin-top: 8px;
+  font-family: var(--body);
+  font-size: .66rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.stack-note {
+  position: absolute;
+  right: 52px;
+  bottom: 88px;
+  width: 240px;
+  font-family: var(--body);
+  font-size: .92rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.82);
+  line-height: 1.45;
+  z-index: 8;
+}
+.stack-hud {
+  position: absolute;
+  right: 28px;
+  bottom: 86px;
+  width: 210px;
+  padding: 16px 18px;
+  border: 1px solid rgba(74,106,142,.32);
+  background: rgba(16,14,10,.92);
+  backdrop-filter: blur(10px);
+}
+.stack-hud-label {
+  font-family: var(--cond);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.stack-hud-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(58,52,34,.8);
+}
+.stack-hud-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.stack-hud-key {
+  font-family: var(--cond);
+  font-size: .55rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.stack-hud-val {
+  font-family: var(--serif);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--cream);
+}
+.stack-drones {
+  position: absolute;
+  top: 19%;
+  left: 14%;
+  width: 108px;
+  height: 80px;
+  animation: float 6s ease-in-out infinite;
+  pointer-events: none;
+}
+.stack-drones svg { position: absolute; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes growX  { from { width: 0; } }
+@keyframes blink  { 0%,100%{opacity:1;}50%{opacity:.25;} }
+@keyframes ping   { 0%{r:4;opacity:.8;}100%{r:20;opacity:0;} }
+@keyframes spin-s { to { transform: rotate(360deg); } }
+@keyframes dash-f { to { stroke-dashoffset: -120; } }
+@keyframes float  { 0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);} }
+.a1{animation:fadeUp .5s .05s both;}
+.a2{animation:fadeUp .5s .15s both;}
+.a3{animation:fadeUp .5s .25s both;}
+.a4{animation:fadeUp .5s .35s both;}
+.a5{animation:fadeUp .5s .45s both;}
+.a6{animation:fadeUp .5s .55s both;}
+
+/* ─── GOLD PANEL SECTION ─── */
+.gold-panel { background: var(--gold); }
+.gold-panel .cell-num { color: var(--bg); }
+.gold-panel .cell-title { color: var(--bg); }
+.gold-panel .cell-body { color: rgba(13,11,7,.65); }
+.gold-panel .grid-4 { background: rgba(13,11,7,.08); }
+.gold-panel .cell { background: transparent; border-right: 1px solid rgba(13,11,7,.12); }
+
+hr.rule { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+</style>
+</head>
+<body>
+
+<!-- ═══ CHROME ═══ -->
+<div class="chrome">
+  <div class="chrome-logo">
+    <div class="chrome-logo-mark">
+      <img src="../assets/atc-mark.png" alt="" aria-hidden="true">
+    </div>
+    <div class="chrome-logo-lockup">
+      <div class="chrome-logo-line">American</div>
+      <div class="chrome-logo-line">Tractor <span class="co">Co.</span></div>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="chrome-bottom">
+    <button class="nav-btn" id="prev">&#8592;</button>
+    <div class="slide-dots" id="dots"></div>
+    <button class="nav-btn" id="next">&#8594;</button>
+  </div>
+  <div class="chrome-hint">← → NAVIGATE</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 01 — COVER  (matches hero screenshot)
+═══════════════════════════════════════════ -->
+<div class="slide" id="s0" data-i="0">
+  <div class="sbody two-col" style="align-items:stretch;">
+
+    <!-- Left: text -->
+    <div style="padding:120px 70px 100px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);">
+      <div class="label a1">American Tractor Company — Building AgFM-1</div>
+
+      <!-- Headline exactly matching site style with blue highlight box -->
+      <h1 class="h-hero a2">
+        <span class="blue-hl">The intelligence</span><br>
+        layer every<br>
+        farm <em>needs.</em>
+      </h1>
+
+      <p class="body-sm a3" style="margin-top:24px;max-width:420px;">
+        We retrofit any tractor, harvester, or UGV with AI-native autonomy — unifying every machine and sensor on the farm into one foundation model.
+      </p>
+
+      <div class="a4" style="margin-top:44px;display:flex;gap:0;">
+        <div class="stat-block">
+          <div class="stat-n">43%</div>
+          <div class="stat-l">of farm operations face<br>critical labor shortages</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-n">$180B</div>
+          <div class="stat-l">US farm equipment market<br>ripe for disruption</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-n">24/7</div>
+          <div class="stat-l">Autonomous operation —<br>harvest never waits</div>
+        </div>
+      </div>
+
+      <div class="a6" style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:blink 2s ease-in-out infinite;flex-shrink:0;display:inline-block;"></span>
+        <span style="font-family:var(--cond);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);">Raising $4M Pre-Seed · 3 Pilots In Motion · 5 Farms · 2 Continents</span>
+      </div>
+    </div>
+
+    <!-- Right: blueprint tractor (matches site's gold wireframe illustration) -->
+    <div style="position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--bg);">
+      <!-- Subtle field-row texture matching site -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.07" viewBox="0 0 500 600" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="fgd" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#C49A2A" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#C49A2A" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#C49A2A" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="0"   x2="500" y2="600" stroke="url(#fgd)" stroke-width="1"/>
+        <line x1="60" y1="0"  x2="560" y2="600" stroke="url(#fgd)" stroke-width="1"/>
+        <line x1="120" y1="0" x2="620" y2="600" stroke="url(#fgd)" stroke-width="1"/>
+        <line x1="180" y1="0" x2="680" y2="600" stroke="url(#fgd)" stroke-width="1"/>
+        <line x1="240" y1="0" x2="740" y2="600" stroke="url(#fgd)" stroke-width="1"/>
+        <line x1="300" y1="0" x2="800" y2="600" stroke="url(#fgd)" stroke-width="1"/>
+        <line x1="360" y1="0" x2="860" y2="600" stroke="url(#fgd)" stroke-width="1"/>
+        <line x1="420" y1="0" x2="920" y2="600" stroke="url(#fgd)" stroke-width="1"/>
+      </svg>
+
+      <!-- BLUEPRINT TRACTOR — gold wireframe exactly like site -->
+      <div style="animation:float 5s ease-in-out infinite;">
+        <svg viewBox="0 0 560 420" width="500" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="2.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="glow-lg" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Ground reflection line -->
+          <line x1="60" y1="405" x2="500" y2="405" stroke="rgba(196,154,42,.15)" stroke-width="1"/>
+          <ellipse cx="300" cy="408" rx="220" ry="8" fill="rgba(196,154,42,.06)"/>
+
+          <!-- ═══ REAR WHEEL (blueprint style) ═══ -->
+          <!-- Outer ring -->
+          <circle cx="390" cy="290" r="112" fill="none" stroke="#C49A2A" stroke-width="1.8" filter="url(#glow)" opacity=".9"/>
+          <!-- Tread detail rings -->
+          <circle cx="390" cy="290" r="112" fill="none" stroke="#C49A2A" stroke-width="6" stroke-dasharray="14 10" opacity=".35"/>
+          <circle cx="390" cy="290" r="104" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".2"/>
+          <!-- Rim ring -->
+          <circle cx="390" cy="290" r="80"  fill="none" stroke="#C49A2A" stroke-width="1.5" opacity=".8"/>
+          <!-- Inner detail circle -->
+          <circle cx="390" cy="290" r="64"  fill="none" stroke="#C49A2A" stroke-width=".8" stroke-dasharray="3 5" opacity=".4"/>
+          <!-- Spokes -->
+          <line x1="390" y1="178" x2="390" y2="402" stroke="#C49A2A" stroke-width="1.5" opacity=".7"/>
+          <line x1="278" y1="290" x2="502" y2="290" stroke="#C49A2A" stroke-width="1.5" opacity=".7"/>
+          <line x1="310" y1="210" x2="470" y2="370" stroke="#C49A2A" stroke-width="1" opacity=".55"/>
+          <line x1="470" y1="210" x2="310" y2="370" stroke="#C49A2A" stroke-width="1" opacity=".55"/>
+          <line x1="310" y1="250" x2="470" y2="330" stroke="#C49A2A" stroke-width=".8" opacity=".3"/>
+          <line x1="470" y1="250" x2="310" y2="330" stroke="#C49A2A" stroke-width=".8" opacity=".3"/>
+          <!-- Hub -->
+          <circle cx="390" cy="290" r="22" fill="none" stroke="#C49A2A" stroke-width="1.5" opacity=".9" filter="url(#glow)"/>
+          <circle cx="390" cy="290" r="10" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".7"/>
+          <circle cx="390" cy="290" r="4"  fill="#C49A2A" opacity=".9"/>
+          <!-- Bolt marks -->
+          <circle cx="390" cy="268" r="3" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".6"/>
+          <circle cx="390" cy="312" r="3" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".6"/>
+          <circle cx="368" cy="290" r="3" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".6"/>
+          <circle cx="412" cy="290" r="3" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".6"/>
+
+          <!-- ═══ FRONT WHEEL ═══ -->
+          <circle cx="110" cy="320" r="76"  fill="none" stroke="#C49A2A" stroke-width="1.8" filter="url(#glow)" opacity=".9"/>
+          <circle cx="110" cy="320" r="76"  fill="none" stroke="#C49A2A" stroke-width="5" stroke-dasharray="10 8" opacity=".3"/>
+          <circle cx="110" cy="320" r="54"  fill="none" stroke="#C49A2A" stroke-width="1.4" opacity=".75"/>
+          <circle cx="110" cy="320" r="42"  fill="none" stroke="#C49A2A" stroke-width=".7" stroke-dasharray="3 4" opacity=".35"/>
+          <line x1="110" y1="244" x2="110" y2="396" stroke="#C49A2A" stroke-width="1.4" opacity=".65"/>
+          <line x1="34"  y1="320" x2="186" y2="320" stroke="#C49A2A" stroke-width="1.4" opacity=".65"/>
+          <line x1="56"  y1="266" x2="164" y2="374" stroke="#C49A2A" stroke-width="1"   opacity=".45"/>
+          <line x1="164" y1="266" x2="56"  y2="374" stroke="#C49A2A" stroke-width="1"   opacity=".45"/>
+          <circle cx="110" cy="320" r="16"  fill="none" stroke="#C49A2A" stroke-width="1.4" opacity=".8" filter="url(#glow)"/>
+          <circle cx="110" cy="320" r="5"   fill="#C49A2A" opacity=".8"/>
+
+          <!-- ═══ CHASSIS FRAME ═══ -->
+          <!-- Main rail -->
+          <rect x="98"  y="268" width="308" height="46" rx="3" fill="none" stroke="#C49A2A" stroke-width="1.4" opacity=".7"/>
+          <!-- Axle housing rear -->
+          <rect x="350" y="256" width="98"  height="60" rx="4" fill="none" stroke="#C49A2A" stroke-width="1.2" opacity=".6"/>
+          <!-- Axle housing front -->
+          <rect x="82"  y="284" width="60"  height="30" rx="3" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".5"/>
+          <!-- Cross members -->
+          <line x1="158" y1="270" x2="158" y2="314" stroke="#C49A2A" stroke-width=".8" opacity=".35"/>
+          <line x1="228" y1="270" x2="228" y2="314" stroke="#C49A2A" stroke-width=".8" opacity=".35"/>
+          <line x1="298" y1="270" x2="298" y2="314" stroke="#C49A2A" stroke-width=".8" opacity=".35"/>
+          <!-- Step rails -->
+          <line x1="282" y1="296" x2="310" y2="296" stroke="#C49A2A" stroke-width="1" opacity=".4"/>
+          <line x1="282" y1="308" x2="310" y2="308" stroke="#C49A2A" stroke-width="1" opacity=".4"/>
+
+          <!-- ═══ ENGINE HOOD ═══ -->
+          <path d="M100,268 L100,178 Q104,162 118,156 L335,138 L335,268 Z" fill="none" stroke="#C49A2A" stroke-width="1.4" opacity=".8"/>
+          <!-- Hood top face -->
+          <path d="M100,180 Q104,163 118,157 L335,140 L335,154 L118,172 Q110,176 104,188 L100,188 Z" fill="none" stroke="#C49A2A" stroke-width=".8" opacity=".4"/>
+          <!-- Louver lines -->
+          <line x1="262" y1="150" x2="320" y2="148" stroke="#C49A2A" stroke-width=".8" opacity=".45"/>
+          <line x1="262" y1="159" x2="320" y2="157" stroke="#C49A2A" stroke-width=".8" opacity=".45"/>
+          <line x1="262" y1="168" x2="320" y2="166" stroke="#C49A2A" stroke-width=".8" opacity=".45"/>
+          <line x1="262" y1="177" x2="320" y2="175" stroke="#C49A2A" stroke-width=".8" opacity=".45"/>
+          <line x1="262" y1="186" x2="320" y2="184" stroke="#C49A2A" stroke-width=".8" opacity=".45"/>
+          <line x1="262" y1="195" x2="320" y2="193" stroke="#C49A2A" stroke-width=".8" opacity=".45"/>
+          <!-- Grille -->
+          <rect x="88"  y="172" width="16"  height="90" rx="2" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".6"/>
+          <line x1="88"  y1="186" x2="104" y2="186" stroke="#C49A2A" stroke-width=".7" opacity=".3"/>
+          <line x1="88"  y1="200" x2="104" y2="200" stroke="#C49A2A" stroke-width=".7" opacity=".3"/>
+          <line x1="88"  y1="214" x2="104" y2="214" stroke="#C49A2A" stroke-width=".7" opacity=".3"/>
+          <line x1="88"  y1="228" x2="104" y2="228" stroke="#C49A2A" stroke-width=".7" opacity=".3"/>
+          <line x1="88"  y1="242" x2="104" y2="242" stroke="#C49A2A" stroke-width=".7" opacity=".3"/>
+          <!-- Headlight -->
+          <rect x="82"  y="204" width="14" height="11" rx="1" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".8"/>
+          <rect x="85"  y="207" width="8"  height="5"  rx=".5" fill="#C49A2A" opacity=".6"/>
+
+          <!-- ═══ CAB ═══ -->
+          <rect x="290" y="80"  width="218" height="228" rx="5" fill="none" stroke="#C49A2A" stroke-width="1.5" opacity=".85" filter="url(#glow)"/>
+          <!-- Front glass -->
+          <rect x="300" y="92"  width="140" height="112" rx="3" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".7"/>
+          <!-- Glass cross hatch (blueprint) -->
+          <line x1="300" y1="92"  x2="440" y2="204" stroke="#C49A2A" stroke-width=".5" opacity=".12"/>
+          <line x1="440" y1="92"  x2="300" y2="204" stroke="#C49A2A" stroke-width=".5" opacity=".12"/>
+          <!-- Side window -->
+          <rect x="444" y="100" width="58"  height="88"  rx="2" fill="none" stroke="#C49A2A" stroke-width=".9" opacity=".6"/>
+          <!-- Rear window -->
+          <rect x="448" y="198" width="52"  height="56"  rx="2" fill="none" stroke="#C49A2A" stroke-width=".9" opacity=".5"/>
+          <!-- Cab roof -->
+          <rect x="288" y="68"  width="222" height="18"  rx="3" fill="none" stroke="#C49A2A" stroke-width="1.2" opacity=".75"/>
+          <!-- Roof lights row -->
+          <rect x="300" y="72"  width="12"  height="7"   rx="1" fill="#C49A2A" opacity=".5"/>
+          <rect x="318" y="72"  width="12"  height="7"   rx="1" fill="#C49A2A" opacity=".5"/>
+          <rect x="458" y="72"  width="12"  height="7"   rx="1" fill="#C49A2A" opacity=".5"/>
+          <rect x="476" y="72"  width="12"  height="7"   rx="1" fill="#C49A2A" opacity=".5"/>
+          <!-- Door handle detail -->
+          <rect x="444" y="172" width="5"   height="22"  rx="2" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".5"/>
+          <!-- Mirror -->
+          <rect x="500" y="98"  width="20"  height="5"   rx="1" fill="none" stroke="#C49A2A" stroke-width=".8" opacity=".5"/>
+          <rect x="516" y="92"  width="10"  height="18"  rx="1" fill="none" stroke="#C49A2A" stroke-width=".9" opacity=".6"/>
+
+          <!-- ═══ EXHAUST ═══ -->
+          <rect x="308" y="24"  width="10"  height="54"  rx="5" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".7"/>
+          <ellipse cx="313" cy="22" rx="11" ry="4" fill="none" stroke="#C49A2A" stroke-width=".8" opacity=".6"/>
+          <!-- Smoke rings -->
+          <circle cx="313" cy="14" r="8"  fill="none" stroke="#C49A2A" stroke-width=".5" opacity=".2"/>
+          <circle cx="316" cy="6"  r="5"  fill="none" stroke="#C49A2A" stroke-width=".4" opacity=".12"/>
+
+          <!-- ═══ IMPLEMENT HITCH ═══ -->
+          <rect x="58"  y="284" width="48"  height="8"   rx="2" fill="none" stroke="#C49A2A" stroke-width=".9" opacity=".5"/>
+          <rect x="44"  y="274" width="20"  height="28"  rx="1" fill="none" stroke="#C49A2A" stroke-width=".9" opacity=".5"/>
+          <rect x="28"  y="264" width="22"  height="46"  rx="1" fill="none" stroke="#C49A2A" stroke-width=".9" opacity=".5"/>
+          <rect x="14"  y="272" width="18"  height="12"  rx="1" fill="none" stroke="#C49A2A" stroke-width=".8" opacity=".4"/>
+          <rect x="14"  y="290" width="18"  height="12"  rx="1" fill="none" stroke="#C49A2A" stroke-width=".8" opacity=".4"/>
+
+          <!-- ═══ RETROFIT INTELLIGENCE (gold sensors) ═══ -->
+
+          <!-- LiDAR dome (roof) -->
+          <rect x="356" y="54"  width="48"  height="18"  rx="3" fill="none" stroke="#C49A2A" stroke-width="1.4" opacity=".95" filter="url(#glow)"/>
+          <circle cx="380" cy="44" r="4" fill="#C49A2A" opacity=".9" filter="url(#glow-lg)"/>
+          <!-- Scan rings -->
+          <g transform="translate(380,44)" style="animation:spin-s 3.5s linear infinite;transform-origin:0 0;">
+            <ellipse cx="0" cy="0" rx="20" ry="7" fill="none" stroke="#C49A2A" stroke-width="1.3" stroke-dasharray="5 5" opacity=".7"/>
+          </g>
+          <g transform="translate(380,44)" style="animation:spin-s 2.2s linear infinite reverse;transform-origin:0 0;">
+            <ellipse cx="0" cy="0" rx="13" ry="4.5" fill="none" stroke="#C49A2A" stroke-width=".9" stroke-dasharray="3 4" opacity=".4"/>
+          </g>
+          <!-- FOV cone -->
+          <path d="M380,44 L280,8 L370,0 L490,6 L380,44" fill="none" stroke="#C49A2A" stroke-width=".7" stroke-dasharray="4 6" opacity=".2"/>
+
+          <!-- RTK GPS antenna -->
+          <rect x="460" y="16"  width="18"  height="8"   rx="2" fill="none" stroke="#C49A2A" stroke-width="1.2" opacity=".9" filter="url(#glow)"/>
+          <rect x="466" y="20"  width="6"   height="54"  rx="3" fill="none" stroke="#C49A2A" stroke-width="1" opacity=".7"/>
+          <circle cx="469" cy="14" r="5" fill="#C49A2A" opacity=".85" filter="url(#glow-lg)"/>
+          <!-- Ping rings (animated) -->
+          <circle cx="469" cy="14" r="5" fill="none" stroke="#C49A2A" stroke-width="1" style="animation:ping 2s ease-out infinite" opacity=".7"/>
+          <circle cx="469" cy="14" r="5" fill="none" stroke="#C49A2A" stroke-width="1" style="animation:ping 2s .8s ease-out infinite" opacity=".4"/>
+
+          <!-- Front camera (A-pillar) -->
+          <rect x="284" y="142" width="12" height="9"  rx="1" fill="none" stroke="#C49A2A" stroke-width="1.1" opacity=".85"/>
+          <circle cx="290" cy="146" r="3" fill="#C49A2A" opacity=".6"/>
+          <!-- Camera FOV -->
+          <path d="M284,146 L200,102 L206,192 L284,146" fill="none" stroke="#C49A2A" stroke-width=".6" stroke-dasharray="4 6" opacity=".2"/>
+
+          <!-- Edge compute box (chassis) -->
+          <rect x="174" y="252" width="84"  height="36"  rx="2" fill="none" stroke="#C49A2A" stroke-width="1.3" opacity=".9" filter="url(#glow)"/>
+          <!-- LEDs -->
+          <circle cx="186" cy="264" r="3" fill="#C49A2A" opacity=".9" style="animation:blink 1.5s ease-in-out infinite" filter="url(#glow)"/>
+          <circle cx="197" cy="264" r="3" fill="#C49A2A" opacity=".6" style="animation:blink 1.5s .3s ease-in-out infinite"/>
+          <circle cx="208" cy="264" r="3" fill="#C49A2A" opacity=".5" style="animation:blink 1.5s .6s ease-in-out infinite"/>
+          <!-- PCB trace lines inside box -->
+          <line x1="180" y1="272" x2="250" y2="272" stroke="#C49A2A" stroke-width=".6" opacity=".25"/>
+          <line x1="180" y1="278" x2="232" y2="278" stroke="#C49A2A" stroke-width=".6" opacity=".2"/>
+
+          <!-- Data flow lines (animated dashes) -->
+          <line x1="380" y1="72"  x2="216" y2="252" stroke="#C49A2A" stroke-width=".9" stroke-dasharray="8 6" style="animation:dash-f 1.8s linear infinite" opacity=".35"/>
+          <line x1="469" y1="68"  x2="258" y2="252" stroke="#C49A2A" stroke-width=".9" stroke-dasharray="7 7" style="animation:dash-f 2.2s .4s linear infinite" opacity=".28"/>
+          <line x1="290" y1="150" x2="216" y2="264" stroke="#C49A2A" stroke-width=".9" stroke-dasharray="6 8" style="animation:dash-f 1.5s .2s linear infinite" opacity=".25"/>
+
+          <!-- Telemetry HUD (windshield overlay) -->
+          <rect x="308" y="100" width="124" height="96" rx="1" fill="rgba(13,11,7,.75)" stroke="#C49A2A" stroke-width=".7" opacity=".8"/>
+          <line x1="308" y1="114" x2="432" y2="114" stroke="#C49A2A" stroke-width=".7" opacity=".35"/>
+          <text x="316" y="111" font-family="monospace" font-size="6" fill="#C49A2A" opacity=".8">AgFM-1  ●  LIVE</text>
+          <text x="316" y="124" font-family="monospace" font-size="5.8" fill="#C49A2A" opacity=".45">RTK GPS   ±0.9 cm</text>
+          <text x="316" y="134" font-family="monospace" font-size="5.8" fill="#C49A2A" opacity=".45">LiDAR     64-beam</text>
+          <text x="316" y="144" font-family="monospace" font-size="5.8" fill="#C49A2A" opacity=".45">Speed     3.7 mph</text>
+          <text x="316" y="154" font-family="monospace" font-size="5.8" fill="#C49A2A" opacity=".45">Heading   091.4°</text>
+          <text x="316" y="164" font-family="monospace" font-size="5.8" fill="#C49A2A" opacity=".45">Zone      4-North</text>
+          <text x="316" y="174" font-family="monospace" font-size="5.8" fill="#C49A2A" opacity=".45">Yield Δ   +14.2%</text>
+          <polyline points="316,188 323,185 331,190 339,183 347,186 355,181 363,184 371,179 379,182 387,177 395,180 403,175 411,178 419,173 427,176" fill="none" stroke="#C49A2A" stroke-width="1.1" opacity=".55"/>
+
+          <!-- Point cloud dots -->
+          <circle cx="42"  cy="252" r="1.6" fill="#C49A2A" opacity=".55"/>
+          <circle cx="26"  cy="232" r="1.2" fill="#C49A2A" opacity=".4"/>
+          <circle cx="58"  cy="218" r="1.6" fill="#C49A2A" opacity=".6"/>
+          <circle cx="12"  cy="262" r="1"   fill="#C49A2A" opacity=".35"/>
+          <circle cx="34"  cy="196" r="1.3" fill="#C49A2A" opacity=".4"/>
+          <circle cx="18"  cy="178" r="1.1" fill="#C49A2A" opacity=".3"/>
+          <circle cx="50"  cy="166" r="1.5" fill="#C49A2A" opacity=".45"/>
+          <circle cx="8"   cy="242" r="1"   fill="#C49A2A" opacity=".25"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 02 — PROBLEM  (matches site layout)
+═══════════════════════════════════════════ -->
+<div class="slide" id="s1" data-i="1">
+  <div class="sbody" style="padding-top:140px;" >
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;">
+      <div>
+        <div class="label a1">The Problem</div>
+        <h2 class="h-section a2">American farming<br>is running on <em>empty.</em></h2>
+        <div class="quote-block a3">
+          <div class="quote-text">"Finding reliable help for planting and harvest is the biggest thing keeping me up at night. Not yields, not prices — people."</div>
+          <div class="quote-attr">— Iowa corn farmer, 3,200 acres · ATC field research, 2025</div>
+        </div>
+        <p class="body-sm a4">The technology to fix this exists. It just hasn't been pointed at the right problem yet — until now.</p>
+      </div>
+      <div class="a4">
+        <div class="acc-item">
+          <div style="display:flex;align-items:center;gap:24px;">
+            <span class="acc-num">01</span>
+            <span class="acc-title">The help isn't coming</span>
+          </div>
+          <span class="acc-badge gold">Labor</span>
+        </div>
+        <div class="acc-item">
+          <div style="display:flex;align-items:center;gap:24px;">
+            <span class="acc-num">02</span>
+            <span class="acc-title">Precision tools that don't connect</span>
+          </div>
+          <span class="acc-badge">Fragmentation</span>
+        </div>
+        <div class="acc-item">
+          <div style="display:flex;align-items:center;gap:24px;">
+            <span class="acc-num">03</span>
+            <span class="acc-title">Legacy OEMs built for yesterday</span>
+          </div>
+          <span class="acc-badge">Incumbents</span>
+        </div>
+        <div class="acc-item">
+          <div style="display:flex;align-items:center;gap:24px;">
+            <span class="acc-num">04</span>
+            <span class="acc-title">Time is the most valuable crop</span>
+          </div>
+          <span class="acc-badge">Urgency</span>
+        </div>
+      </div>
+    </div>
+    <div class="a5" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1px;background:var(--border);margin-top:36px;">
+      <div class="cell">
+        <div class="cell-num red">74.7M</div>
+        <div class="cell-title">Acres Lost</div>
+        <div class="cell-body">~$340B in productive land value — permanently gone, 1997–2022.</div>
+      </div>
+      <div class="cell">
+        <div class="cell-num red">−8%</div>
+        <div class="cell-title">Yield by 2050</div>
+        <div class="cell-body">Climate reduces yields 8% by 2050. Up to 24% by 2100 without intervention.</div>
+      </div>
+      <div class="cell">
+        <div class="cell-num" style="color:var(--gold);">60%</div>
+        <div class="cell-title">Labor Shortage</div>
+        <div class="cell-body">60%+ of large producers face acute shortages. Inputs up 15% in 2025 alone.</div>
+      </div>
+      <div class="cell">
+        <div class="cell-num" style="color:var(--gold);">~60</div>
+        <div class="cell-title">Avg. Farmer Age</div>
+        <div class="cell-body">OEM lock-ins, fragmented data, zero interoperability. The machine still can't think.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 03 — THE PIVOT
+═══════════════════════════════════════════ -->
+<div class="slide" id="s2" data-i="2">
+  <div class="sbody">
+    <div class="label a1">02 — The Insight</div>
+    <h2 class="h-section a2">We stopped asking<br><del>how to build a tractor</del><br>and started asking<br><em>how to make every tractor think.</em></h2>
+    <div class="split a3">
+      <div class="split-side faded">
+        <div class="split-h">Build a tractor<br>from scratch.</div>
+        <ul class="split-list cross">
+          <li><span class="mk">✕</span>$50M+ capex before first customer</li>
+          <li><span class="mk">✕</span>10-year regulatory runway</li>
+          <li><span class="mk">✕</span>Compete against Deere's century of distribution</li>
+          <li><span class="mk">✕</span>Farmers already have tractors</li>
+        </ul>
+      </div>
+      <div class="split-side lit">
+        <div class="split-h">Retrofit every machine on the farm with intelligence.</div>
+        <ul class="split-list check">
+          <li><span class="mk">✓</span>Works on any John Deere, Case IH, AGCO — today</li>
+          <li><span class="mk">✓</span>$18–25K retrofit vs. $300K+ new autonomous machine</li>
+          <li><span class="mk">✓</span>Unifies tractors, harvesters, UGVs, drones, soil sensors into one Ag-OS</li>
+          <li><span class="mk">✓</span>Data moat compounds with every connected acre</li>
+        </ul>
+      </div>
+    </div>
+    <div class="a4" style="margin-top:20px;padding:18px 24px;border-left:3px solid var(--gold);background:rgba(196,154,42,.05);">
+      <p style="font-family:var(--serif);font-size:1rem;font-style:italic;color:rgba(237,232,213,.75);line-height:1.55;">We are not a tractor company. We are the intelligence layer — the <span style="color:var(--cream);font-style:normal;font-weight:700;">AWS of agriculture.</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 04 — PRODUCT  (accordion style)
+═══════════════════════════════════════════ -->
+<div class="slide" id="s3" data-i="3">
+  <div class="sbody">
+    <div class="label a1">03 — Technology</div>
+    <h2 class="h-section a2" style="margin-bottom:8px;">AgFM-1 — the world's first<br>agricultural <em>foundation model.</em></h2>
+    <p class="body-sm a3" style="margin-bottom:32px;max-width:560px;">A hardware retrofit kit + software platform that converts any commercial tractor into a fully autonomous, data-generating farm asset — in under 4 hours.</p>
+    <div class="a4">
+      <div class="acc-item" style="background:rgba(196,154,42,.06);border-top:1px solid var(--border);padding:20px 0;">
+        <div style="display:flex;align-items:center;gap:24px;">
+          <span class="acc-num">01</span>
+          <span class="acc-title">AgFM-1 Foundation Model</span>
+        </div>
+        <span class="acc-badge gold">Core IP</span>
+      </div>
+      <div class="acc-item">
+        <div style="display:flex;align-items:center;gap:24px;">
+          <span class="acc-num">02</span>
+          <span class="acc-title">Full Sensor Suite & Perception</span>
+        </div>
+        <span class="acc-badge gold">Prototyping</span>
+      </div>
+      <div class="acc-item">
+        <div style="display:flex;align-items:center;gap:24px;">
+          <span class="acc-num">03</span>
+          <span class="acc-title">Terra-VLA Autonomous Agent</span>
+        </div>
+        <span class="acc-badge">In Design</span>
+      </div>
+      <div class="acc-item">
+        <div style="display:flex;align-items:center;gap:24px;">
+          <span class="acc-num">04</span>
+          <span class="acc-title">Fleet Intelligence & Farm Dashboard</span>
+        </div>
+        <span class="acc-badge">Roadmap</span>
+      </div>
+    </div>
+    <!-- Stats row — matches site's gold panel -->
+    <div class="a5" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1px;background:var(--gold);margin-top:32px;">
+      <div style="background:var(--gold);padding:24px 28px;border-right:1px solid rgba(13,11,7,.15);">
+        <div style="font-family:var(--serif);font-size:2.2rem;font-weight:800;color:var(--bg);line-height:1;">1st</div>
+        <div style="font-family:var(--cond);font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(13,11,7,.6);margin-top:6px;">Foundation model<br>built for agriculture</div>
+      </div>
+      <div style="background:var(--gold);padding:24px 28px;border-right:1px solid rgba(13,11,7,.15);">
+        <div style="font-family:var(--serif);font-size:2.2rem;font-weight:800;color:var(--bg);line-height:1;">40%</div>
+        <div style="font-family:var(--cond);font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(13,11,7,.6);margin-top:6px;">Reduction in per-acre<br>labor cost at scale</div>
+      </div>
+      <div style="background:var(--gold);padding:24px 28px;border-right:1px solid rgba(13,11,7,.15);">
+        <div style="font-family:var(--serif);font-size:2.2rem;font-weight:800;color:var(--bg);line-height:1;">24/7</div>
+        <div style="font-family:var(--cond);font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(13,11,7,.6);margin-top:6px;">Operational uptime —<br>planting windows honored</div>
+      </div>
+      <div style="background:var(--gold);padding:24px 28px;">
+        <div style="font-family:var(--serif);font-size:2.2rem;font-weight:800;color:var(--bg);line-height:1;">5</div>
+        <div style="font-family:var(--cond);font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(13,11,7,.6);margin-top:6px;">Integrated stack layers<br>model to metal, all owned</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 03B — STACK NETWORK
+═══════════════════════════════════════════ -->
+<div class="slide" id="s3-stack" data-i="3.5">
+  <div class="sbody" style="padding:0;overflow:hidden;background:#010101;">
+    <div class="stack-layout">
+
+      <!-- Text overlay — upper left -->
+      <div class="stack-copy">
+        <div class="label a1">03 — Technology Stack</div>
+        <p class="body-sm a3" style="margin-top:8px;max-width:290px;font-size:.84rem;color:rgba(255,255,255,.75);">
+          AgFM-1 fuses orbital context, aerial perception, onboard autonomy, and in-field ground truth into one operating picture for the entire farm.
+        </p>
+        <div class="stack-techline a4">
+          Foundation model / full perception / Terra-VLA / fleet intelligence
+        </div>
+      </div>
+
+      <!-- Full-bleed terrain scene -->
+      <div class="stack-scene a3">
+        <svg class="stack-mesh" viewBox="0 0 1200 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <filter id="stackGlow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="2.2" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="stackGlowLg" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="4.6" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Topographic terrain — horizontal contour lines (22) -->
+          <path class="stack-contour" d="M-20 50 C80 38,200 26,340 26 C470 26,520 48,600 56 C680 58,750 54,840 34 C930 22,1060 36,1120 46 L1220 54"/>
+          <path class="stack-contour" d="M-20 74 C80 62,200 50,340 50 C470 50,520 72,600 80 C680 82,750 78,840 58 C930 46,1060 60,1120 70 L1220 78"/>
+          <path class="stack-contour" d="M-20 98 C80 86,200 74,340 74 C470 74,520 96,600 104 C680 106,750 102,840 82 C930 70,1060 84,1120 94 L1220 102"/>
+          <path class="stack-contour" d="M-20 122 C80 110,200 98,340 98 C470 98,520 120,600 128 C680 130,750 126,840 106 C930 94,1060 108,1120 118 L1220 126"/>
+          <path class="stack-contour" d="M-20 147 C80 135,200 123,340 123 C470 123,520 145,600 153 C680 155,750 151,840 131 C930 119,1060 133,1120 143 L1220 151"/>
+          <path class="stack-contour" d="M-20 172 C80 160,200 148,340 148 C470 148,520 170,600 178 C680 180,750 176,840 156 C930 144,1060 158,1120 168 L1220 176"/>
+          <path class="stack-contour" d="M-20 198 C80 186,200 174,340 174 C470 174,520 196,600 204 C680 206,750 202,840 182 C930 170,1060 184,1120 194 L1220 202"/>
+          <path class="stack-contour" d="M-20 224 C80 212,200 200,340 200 C470 200,520 222,600 230 C680 232,750 228,840 208 C930 196,1060 210,1120 220 L1220 228"/>
+          <path class="stack-contour" d="M-20 250 C80 238,200 226,340 226 C470 226,520 248,600 256 C680 258,750 254,840 234 C930 222,1060 236,1120 246 L1220 254"/>
+          <path class="stack-contour" d="M-20 277 C80 265,200 253,340 253 C470 253,520 275,600 283 C680 285,750 281,840 261 C930 249,1060 263,1120 273 L1220 281"/>
+          <path class="stack-contour" d="M-20 304 C80 292,200 280,340 280 C470 280,520 302,600 310 C680 312,750 308,840 288 C930 276,1060 290,1120 300 L1220 308"/>
+          <path class="stack-contour" d="M-20 332 C80 320,200 308,340 308 C470 308,520 330,600 338 C680 340,750 336,840 316 C930 304,1060 318,1120 328 L1220 336"/>
+          <path class="stack-contour" d="M-20 360 C80 348,200 336,340 336 C470 336,520 358,600 366 C680 368,750 364,840 344 C930 332,1060 346,1120 356 L1220 364"/>
+          <path class="stack-contour" d="M-20 389 C80 377,200 365,340 365 C470 365,520 387,600 395 C680 397,750 393,840 373 C930 361,1060 375,1120 385 L1220 393"/>
+          <path class="stack-contour" d="M-20 419 C80 407,200 395,340 395 C470 395,520 417,600 425 C680 427,750 423,840 403 C930 391,1060 405,1120 415 L1220 423"/>
+          <path class="stack-contour" d="M-20 449 C80 437,200 425,340 425 C470 425,520 447,600 455 C680 457,750 453,840 433 C930 421,1060 435,1120 445 L1220 453"/>
+          <path class="stack-contour" d="M-20 480 C80 468,200 456,340 456 C470 456,520 478,600 486 C680 488,750 484,840 464 C930 452,1060 466,1120 476 L1220 484"/>
+          <path class="stack-contour" d="M-20 512 C80 500,200 488,340 488 C470 488,520 510,600 518 C680 520,750 516,840 496 C930 484,1060 498,1120 508 L1220 516"/>
+          <path class="stack-contour" d="M-20 544 C80 532,200 520,340 520 C470 520,520 542,600 550 C680 552,750 548,840 528 C930 516,1060 530,1120 540 L1220 548"/>
+          <path class="stack-contour" d="M-20 578 C80 566,200 554,340 554 C470 554,520 576,600 584 C680 586,750 582,840 562 C930 550,1060 564,1120 574 L1220 582"/>
+          <path class="stack-contour" d="M-20 612 C80 600,200 588,340 588 C470 588,520 610,600 618 C680 620,750 616,840 596 C930 584,1060 598,1120 608 L1220 616"/>
+          <path class="stack-contour" d="M-20 648 C80 636,200 624,340 624 C470 624,520 646,600 654 C680 656,750 652,840 632 C930 620,1060 634,1120 644 L1220 652"/>
+
+          <!-- Topographic terrain — vertical contour lines (14) -->
+          <path class="stack-contour" d="M80 -10 C92 150,72 350,80 460 C86 560,82 630,80 700"/>
+          <path class="stack-contour" d="M160 -10 C174 150,152 350,160 460 C166 560,162 630,160 700"/>
+          <path class="stack-contour" d="M240 -10 C256 150,232 350,242 460 C248 560,245 630,240 700"/>
+          <path class="stack-contour" d="M320 -10 C338 150,312 350,320 460 C328 560,324 630,320 700"/>
+          <path class="stack-contour" d="M400 -10 C418 150,392 350,400 460 C408 560,404 630,400 700"/>
+          <path class="stack-contour" d="M480 -10 C498 150,470 350,480 460 C488 560,484 630,480 700"/>
+          <path class="stack-contour" d="M560 -10 C578 150,550 350,560 460 C568 560,564 630,560 700"/>
+          <path class="stack-contour" d="M640 -10 C658 150,630 350,640 460 C648 560,644 630,640 700"/>
+          <path class="stack-contour" d="M720 -10 C738 150,710 350,720 460 C728 560,724 630,720 700"/>
+          <path class="stack-contour" d="M800 -10 C818 150,790 350,800 460 C808 560,804 630,800 700"/>
+          <path class="stack-contour" d="M880 -10 C898 150,870 350,880 460 C888 560,884 630,880 700"/>
+          <path class="stack-contour" d="M960 -10 C978 150,950 350,960 460 C968 560,964 630,960 700"/>
+          <path class="stack-contour" d="M1040 -10 C1058 150,1030 350,1040 460 C1048 560,1044 630,1040 700"/>
+          <path class="stack-contour" d="M1120 -10 C1138 150,1110 350,1120 460 C1128 560,1124 630,1120 700"/>
+
+          <!-- Network connection lines -->
+          <path class="stack-link" d="M600 58 L578 366"/>
+          <path class="stack-link" d="M600 58 L210 198"/>
+          <path class="stack-link" d="M600 58 L960 270"/>
+          <path class="stack-link soft" d="M210 198 L578 366"/>
+          <path class="stack-link soft" d="M210 198 L250 522"/>
+          <path class="stack-link soft gold" d="M250 522 L578 366"/>
+          <path class="stack-link soft" d="M960 270 L578 366"/>
+          <path class="stack-link soft" d="M960 270 L250 522"/>
+
+          <!-- Satellite icon -->
+          <g transform="translate(561 22)">
+            <rect x="20" y="10" width="38" height="20" rx="4" class="stack-sat-line"/>
+            <rect x="0" y="13" width="18" height="14" rx="2" class="stack-sat-line"/>
+            <rect x="60" y="13" width="18" height="14" rx="2" class="stack-sat-line"/>
+            <path class="stack-sat-line" d="M39 0 V10"/>
+            <path class="stack-sat-line" d="M31 0 H47"/>
+            <path class="stack-sat-line" d="M39 30 V40"/>
+            <path class="stack-sat-line" d="M24 44 C28 36, 50 36, 54 44"/>
+            <path class="stack-sat-line" d="M16 58 C26 48, 52 48, 62 58"/>
+            <path class="stack-sat-line" d="M8 72 C22 58, 56 58, 70 72"/>
+          </g>
+
+          <!-- Tractor fleet icon -->
+          <g transform="translate(511 311)">
+            <circle cx="84" cy="66" r="22" class="stack-tractor"/>
+            <circle cx="25" cy="72" r="12" class="stack-tractor"/>
+            <path class="stack-tractor" d="M18 62 H56 L64 38 H102 L118 52 V66 H18 Z"/>
+            <path class="stack-tractor" d="M64 38 V12 H92 L103 38"/>
+            <path class="stack-tractor" d="M73 12 H93"/>
+            <path class="stack-tractor" d="M104 26 H116"/>
+            <path class="stack-tractor" d="M40 46 H62"/>
+            <path class="stack-tractor" d="M96 44 H112"/>
+          </g>
+
+          <!-- Field sensor nodes -->
+          <g transform="translate(222 536)">
+            <path class="stack-sensor-line" d="M0 14 V-22"/>
+            <circle cx="0" cy="-24" r="4" class="stack-node-dot"/>
+            <circle cx="0" cy="-24" r="4" fill="none" stroke="rgba(116,181,214,.7)" stroke-width="1" style="animation:ping 2.2s ease-out infinite"/>
+          </g>
+          <g transform="translate(254 522)">
+            <path class="stack-sensor-line" d="M0 18 V-20"/>
+            <circle cx="0" cy="-22" r="4" class="stack-node-dot"/>
+            <circle cx="0" cy="-22" r="4" fill="none" stroke="rgba(116,181,214,.7)" stroke-width="1" style="animation:ping 2.2s .4s ease-out infinite"/>
+          </g>
+          <g transform="translate(288 508)">
+            <path class="stack-sensor-line" d="M0 18 V-18"/>
+            <circle cx="0" cy="-20" r="4" class="stack-node-dot"/>
+            <circle cx="0" cy="-20" r="4" fill="none" stroke="rgba(116,181,214,.7)" stroke-width="1" style="animation:ping 2.2s .8s ease-out infinite"/>
+          </g>
+
+          <!-- Network node dots -->
+          <circle cx="578" cy="366" r="5" class="stack-node-dot"/>
+          <circle cx="210" cy="198" r="4" class="stack-node-dot"/>
+          <circle cx="600" cy="58" r="4" class="stack-node-dot"/>
+          <circle cx="960" cy="270" r="4" class="stack-node-dot"/>
+          <circle cx="250" cy="522" r="4" class="stack-node-dot"/>
+        </svg>
+
+        <!-- Floating drone cluster -->
+        <div class="stack-drones" aria-hidden="true">
+          <svg width="42" height="28" viewBox="0 0 42 28" style="left:0;top:20px;">
+            <path class="stack-drone-line" d="M7 9 L18 14 L7 19 M35 9 L24 14 L35 19 M21 6 V22"/>
+            <circle cx="21" cy="14" r="4" class="stack-tractor"/>
+            <circle cx="7" cy="9" r="2" class="stack-drone-line"/>
+            <circle cx="35" cy="9" r="2" class="stack-drone-line"/>
+            <circle cx="7" cy="19" r="2" class="stack-drone-line"/>
+            <circle cx="35" cy="19" r="2" class="stack-drone-line"/>
+          </svg>
+          <svg width="34" height="24" viewBox="0 0 34 24" style="left:42px;top:0;">
+            <path class="stack-drone-line" d="M6 7 L14 12 L6 17 M28 7 L20 12 L28 17 M17 5 V19"/>
+            <circle cx="17" cy="12" r="3.5" class="stack-tractor"/>
+            <circle cx="6" cy="7" r="1.6" class="stack-drone-line"/>
+            <circle cx="28" cy="7" r="1.6" class="stack-drone-line"/>
+            <circle cx="6" cy="17" r="1.6" class="stack-drone-line"/>
+            <circle cx="28" cy="17" r="1.6" class="stack-drone-line"/>
+          </svg>
+          <svg width="52" height="34" viewBox="0 0 52 34" style="left:18px;top:36px;">
+            <path class="stack-drone-line" d="M8 10 L22 17 L8 24 M44 10 L30 17 L44 24 M26 7 V28"/>
+            <circle cx="26" cy="17" r="4.5" class="stack-tractor"/>
+            <circle cx="8" cy="10" r="2" class="stack-drone-line"/>
+            <circle cx="44" cy="10" r="2" class="stack-drone-line"/>
+            <circle cx="8" cy="24" r="2" class="stack-drone-line"/>
+            <circle cx="44" cy="24" r="2" class="stack-drone-line"/>
+          </svg>
+        </div>
+
+        <!-- Node labels — Scout AI targeting reticle style -->
+        <div class="stack-pill satellite a4">
+          <span class="sig"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><circle cx="7" cy="7" r="1.5" fill="rgba(77,215,187,.9)"/><line x1="7" y1="0" x2="7" y2="2.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="7" y1="11.5" x2="7" y2="14" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="0" y1="7" x2="2.5" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="11.5" y1="7" x2="14" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/></svg></span>
+          <span class="txt">Satellites</span>
+        </div>
+        <div class="stack-pill drone a4">
+          <span class="sig"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><circle cx="7" cy="7" r="1.5" fill="rgba(77,215,187,.9)"/><line x1="7" y1="0" x2="7" y2="2.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="7" y1="11.5" x2="7" y2="14" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="0" y1="7" x2="2.5" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="11.5" y1="7" x2="14" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/></svg></span>
+          <span class="txt">Drone Swarm</span>
+        </div>
+        <div class="stack-pill tractor a5">
+          <span class="sig"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><circle cx="7" cy="7" r="1.5" fill="rgba(77,215,187,.9)"/><line x1="7" y1="0" x2="7" y2="2.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="7" y1="11.5" x2="7" y2="14" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="0" y1="7" x2="2.5" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="11.5" y1="7" x2="14" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/></svg></span>
+          <span class="txt">Tractor Fleet</span>
+        </div>
+        <div class="stack-pill sensor a5">
+          <span class="sig"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><circle cx="7" cy="7" r="1.5" fill="rgba(77,215,187,.9)"/><line x1="7" y1="0" x2="7" y2="2.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="7" y1="11.5" x2="7" y2="14" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="0" y1="7" x2="2.5" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="11.5" y1="7" x2="14" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/></svg></span>
+          <span class="txt">Field Sensors</span>
+        </div>
+        <div class="stack-pill dashboard a4">
+          <span class="sig"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><circle cx="7" cy="7" r="1.5" fill="rgba(77,215,187,.9)"/><line x1="7" y1="0" x2="7" y2="2.5" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="7" y1="11.5" x2="7" y2="14" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="0" y1="7" x2="2.5" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/><line x1="11.5" y1="7" x2="14" y2="7" stroke="rgba(77,215,187,.9)" stroke-width="1"/></svg></span>
+          <span class="txt">Fleet Intel</span>
+        </div>
+
+        <!-- Central AgFM-1 signal fusion card -->
+        <div class="stack-core a5">
+          <div class="stack-core-kicker">AgFM-1 Signal Fusion</div>
+          <div class="stack-core-title">One live farm model.</div>
+          <div class="stack-core-copy">Every signal refines the same agricultural world state.</div>
+        </div>
+
+        <!-- Bottom-right collaborative autonomy caption -->
+        <div class="stack-note a6">
+          Collaborative farm autonomy: one agricultural foundation model coordinating orbit, air, ground, and soil in real time.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 04 — MARKET
+═══════════════════════════════════════════ -->
+<div class="slide" id="s4" data-i="4">
+  <div class="sbody">
+    <div class="label a1">04 — Market Opportunity</div>
+    <h2 class="h-section a2">A $59B market with<br><em>no clear winner.</em></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:40px;align-items:start;" class="a3">
+      <div>
+        <div style="font-family:var(--cond);font-size:.6rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Market Sizing</div>
+        <div class="tam-row">
+          <div class="tam-lbl-row"><span class="tam-name">TAM — Smart Agriculture</span><span class="tam-val">$43.3B</span></div>
+          <div class="tam-track"><div class="tam-fill" style="width:100%;"></div></div>
+        </div>
+        <div class="tam-row" style="margin-top:16px;">
+          <div class="tam-lbl-row"><span class="tam-name">SAM — Autonomous Tractors</span><span class="tam-val">$15.4B</span></div>
+          <div class="tam-track"><div class="tam-fill" style="width:72%;animation-delay:.2s;"></div></div>
+        </div>
+        <div class="tam-row" style="margin-top:16px;">
+          <div class="tam-lbl-row"><span class="tam-name">SOM — Retrofit + SaaS (Yr 5)</span><span class="tam-val">$1.2B</span></div>
+          <div class="tam-track"><div class="tam-fill" style="width:28%;animation-delay:.4s;"></div></div>
+        </div>
+        <div style="margin-top:28px;padding:22px 24px;border:1px solid var(--border2);background:var(--bg1);">
+          <div style="font-family:var(--cond);font-size:.58rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Adjacent — Carbon Credits</div>
+          <div style="font-family:var(--serif);font-size:2.2rem;font-weight:800;color:var(--gold);line-height:1;">$324B</div>
+          <div class="body-sm" style="margin-top:6px;">U.S. market by 2030. Our verified MRV data unlocks $75–150+/acre for farmers and a platform fee for ATC on every credit.</div>
+        </div>
+      </div>
+      <div>
+        <div class="quote-block" style="margin-bottom:24px;">
+          <div class="quote-text">"Just as GPS transformed tractors, autonomy will revolutionize farming."</div>
+        </div>
+        <p class="body-sm" style="margin-bottom:28px;">We're not betting on a trend. We're building the category-defining platform at the inflection point — before incumbents can respond.</p>
+        <div style="display:flex;gap:0;border:1px solid var(--border);">
+          <div style="padding:20px 24px;border-right:1px solid var(--border);">
+            <div style="font-family:var(--serif);font-size:1.9rem;font-weight:800;color:var(--gold);">5×</div>
+            <div style="font-family:var(--cond);font-size:.58rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px;">Growth by 2033</div>
+          </div>
+          <div style="padding:20px 24px;border-right:1px solid var(--border);">
+            <div style="font-family:var(--serif);font-size:1.9rem;font-weight:800;color:var(--gold);">$5.7B</div>
+            <div style="font-family:var(--cond);font-size:.58rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px;">U.S. Climate Grants</div>
+          </div>
+          <div style="padding:20px 24px;">
+            <div style="font-family:var(--serif);font-size:1.9rem;font-weight:800;color:var(--gold);">30%</div>
+            <div style="font-family:var(--cond);font-size:.58rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px;">N. America Share</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 06 — BUSINESS MODEL
+═══════════════════════════════════════════ -->
+<div class="slide" id="s5" data-i="5">
+  <div class="sbody pad-less">
+    <div class="label a1">05 — Business Model</div>
+    <h2 class="h-section a2">Four streams.<br><em>One compounding platform.</em></h2>
+    <div class="grid-2 a3" style="margin-top:36px;">
+      <div class="cell">
+        <div class="cell-num" style="font-size:3rem;color:rgba(237,232,213,.12);">01</div>
+        <div class="cell-title">Retrofit Hardware</div>
+        <div class="cell-body">Sensor suite + edge compute for any tractor or harvester. ~$18–25K ASP. Pays back in one season on 1,000 acres.</div>
+        <div class="cell-tag">Hardware + Service</div>
+      </div>
+      <div class="cell">
+        <div class="cell-num" style="font-size:3rem;color:rgba(237,232,213,.12);">02</div>
+        <div class="cell-title">AgFM-1 SaaS</div>
+        <div class="cell-body">Autonomy, fleet management, Ag-OS insight engine. Per-machine + per-acre pricing. Stickiness compounds with data history.</div>
+        <div class="cell-tag">$180–480 / machine / mo.</div>
+      </div>
+      <div class="cell">
+        <div class="cell-num" style="font-size:3rem;color:rgba(237,232,213,.12);">03</div>
+        <div class="cell-title">Precision Ag Data</div>
+        <div class="cell-body">Hyperspectral yield maps, soil health indices licensed to insurers, commodity traders, and input companies.</div>
+        <div class="cell-tag">B2B Data Licensing</div>
+      </div>
+      <div class="cell">
+        <div class="cell-num" style="font-size:3rem;color:rgba(237,232,213,.12);">04</div>
+        <div class="cell-title">Carbon MRV</div>
+        <div class="cell-body">Verified MRV data enables farmers to earn $75–150+/acre in carbon offsets. ATC earns a platform fee on every credit.</div>
+        <div class="cell-tag">$75–150+ / acre / year</div>
+      </div>
+    </div>
+    <div class="a4" style="display:flex;gap:0;border:1px solid var(--border);background:var(--bg1);margin-top:2px;">
+      <div style="padding:16px 28px;border-right:1px solid var(--border);"><div style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--cream);">1K–5K acres</div><div class="stat-l" style="font-family:var(--cond);">Target Farm</div></div>
+      <div style="padding:16px 28px;border-right:1px solid var(--border);"><div style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--cream);">US + LATAM</div><div class="stat-l" style="font-family:var(--cond);">Launch Markets</div></div>
+      <div style="padding:16px 28px;border-right:1px solid var(--border);"><div style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--cream);">&lt;14 months</div><div class="stat-l" style="font-family:var(--cond);">Hardware Payback</div></div>
+      <div style="padding:16px 28px;"><div style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--gold);">USDA + Land-Grant</div><div class="stat-l" style="font-family:var(--cond);">Channel Partners</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 07 — WHY NOW
+═══════════════════════════════════════════ -->
+<div class="slide" id="s6" data-i="6">
+  <div class="sbody">
+    <div class="label a1">06 — Why Now</div>
+    <h2 class="h-section a2">Three forces.<br><em>One window.</em></h2>
+    <div class="grid-3 a3" style="margin-top:40px;">
+      <div class="cell">
+        <div style="font-size:1.6rem;margin-bottom:18px;filter:sepia(1) brightness(.9);">🤖</div>
+        <div class="cell-title">Foundation Models Crossed the Threshold</div>
+        <div class="cell-body">Vision-language-action models now have the precision for real-world autonomy. The core technology needed to run AgFM-1 didn't exist 24 months ago.</div>
+      </div>
+      <div class="cell">
+        <div style="font-size:1.6rem;margin-bottom:18px;filter:sepia(1) brightness(.9);">🌾</div>
+        <div class="cell-title">Labor Shortage Is Structural, Not Cyclical</div>
+        <div class="cell-body">Farm labor availability dropped 30% since 2015 and will not recover. H-2A delays, aging workforce, immigration policy — all arrows point one direction.</div>
+      </div>
+      <div class="cell">
+        <div style="font-size:1.6rem;margin-bottom:18px;filter:sepia(1) brightness(.9);">🏛️</div>
+        <div class="cell-title">Unprecedented Policy Tailwinds</div>
+        <div class="cell-body">$5.7B in U.S. climate grants available now. Bipartisan support for domestic ag automation. Carbon markets on track to surpass farm subsidies by 2030.</div>
+      </div>
+    </div>
+    <div class="a4" style="margin-top:20px;padding:18px 26px;border:1px solid var(--border2);background:var(--bg1);">
+      <p class="body-sm">Incumbents are optimizing for hardware margin. None are building a farm intelligence platform. <strong style="color:var(--cream);font-weight:400;">The category is unowned.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 08 — TEAM
+═══════════════════════════════════════════ -->
+<div class="slide" id="s7" data-i="7">
+  <div class="sbody pad-less">
+    <div class="label a1">07 — Team</div>
+    <h2 class="h-section a2">Farmers who code.<br><em>Engineers who farm.</em></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:32px;" class="a3">
+      <div class="tc"><div class="tc-init">TS</div><div><div class="tc-name">Tyler Smith, PhD</div><div class="tc-role">Co-Founder · CEO</div><div class="tc-bio">4th-generation Arizona farmer. ASU Luminosity Lab — $25M raised, 8 startups incubated. Deep tech AI + autonomous systems.</div><div class="tc-from">ASU Luminosity Lab · Smith Farms, CA</div></div></div>
+      <div class="tc"><div class="tc-init">TR</div><div><div class="tc-name">Tilak Raj Thanga Raj</div><div class="tc-role">Co-Founder · COO</div><div class="tc-bio">Indian paddy farming family. First FDA-cleared cooperatively controlled robot. General-purpose robotics at Google DeepMind.</div><div class="tc-from">Google DeepMind · Stanford · Macheon AI</div></div></div>
+      <div class="tc"><div class="tc-init">SS</div><div><div class="tc-name">Srikanth Saripalli</div><div class="tc-role">Systems & Autonomy</div><div class="tc-bio">Director, Center for Autonomous Vehicles and Sensor Systems, Texas A&M. Led DARPA-funded autonomous vehicle research.</div><div class="tc-from">Texas A&M CAVS</div></div></div>
+      <div class="tc"><div class="tc-init">DB</div><div><div class="tc-name">Dew Bhaumik</div><div class="tc-role">Robotics Engineer</div><div class="tc-bio">General-purpose robotics from Tesla. Designing the retrofit hardware stack and actuation systems for the Terra kit.</div><div class="tc-from">Tesla · Noah Medical</div></div></div>
+      <div class="tc"><div class="tc-init">TL</div><div><div class="tc-name">Trevor Lucero</div><div class="tc-role">LV / Hybrid Systems</div><div class="tc-bio">Retrofit kit compatible with any diesel or hybrid machine from day one. Electrification integration expertise.</div><div class="tc-from">Nikola Motor Company</div></div></div>
+      <div class="tc"><div class="tc-init">KS</div><div><div class="tc-name">Kylel Scott</div><div class="tc-role">Perception & Autonomy</div><div class="tc-bio">Vision-only perception for row-crop geometry and obstacle avoidance. Works without GPS fallback.</div><div class="tc-from">NASA · Aerospace Robotics</div></div></div>
+    </div>
+    <div class="a4" style="margin-top:16px;padding:16px 24px;border:1px solid var(--border);background:var(--bg1);display:flex;flex-wrap:wrap;gap:0;">
+      <span style="font-family:var(--cond);font-size:.68rem;color:var(--muted);padding:4px 18px;border-right:1px solid var(--border);">Planet Labs</span>
+      <span style="font-family:var(--cond);font-size:.68rem;color:var(--muted);padding:4px 18px;border-right:1px solid var(--border);">Texas A&M · TEES</span>
+      <span style="font-family:var(--cond);font-size:.68rem;color:var(--muted);padding:4px 18px;border-right:1px solid var(--border);">U of Arizona · Yuma</span>
+      <span style="font-family:var(--cond);font-size:.68rem;color:var(--muted);padding:4px 18px;border-right:1px solid var(--border);">Washington State U.</span>
+      <span style="font-family:var(--cond);font-size:.68rem;color:var(--muted);padding:4px 18px;border-right:1px solid var(--border);">UCSC AgTech Alliance</span>
+      <span style="font-family:var(--cond);font-size:.68rem;color:var(--muted);padding:4px 18px;">Southwest Sod · AZ</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 09 — TRACTION
+═══════════════════════════════════════════ -->
+<div class="slide" id="s8" data-i="8">
+  <div class="sbody">
+    <div class="label a1">08 — Traction</div>
+    <h2 class="h-section a2">Pre-seed with<br><em>field validation.</em></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:40px;align-items:start;" class="a3">
+      <div>
+        <div class="tl-item"><div class="tl-date">Q2 2025</div><div class="tl-body"><div class="tl-title">AgFM-1 Functional — TRL 5</div><div class="tl-desc">Ag-OS Insight Engine + Terra-VLA operational in simulation and controlled field.</div></div></div>
+        <div class="tl-item"><div class="tl-date">Q3 2025</div><div class="tl-body"><div class="tl-title">3 Commercial LOIs Signed</div><div class="tl-desc">Row-crop operations in Arizona, California, Texas. 1,000–4,200 acres. USDA grant co-funding in application.</div></div></div>
+        <div class="tl-item"><div class="tl-date">Q4 2025</div><div class="tl-body"><div class="tl-title">Pre-Seed Close · First Kit Deployed</div><div class="tl-desc">Retrofit kit on-farm. Digital twin running. Core IP filed. Unit economics validated.</div></div></div>
+        <div class="tl-item"><div class="tl-date">Q2 2026</div><div class="tl-body dim"><div class="tl-title">Seed Round — $25M</div><div class="tl-desc">Field ROI proven. 10+ farms. Ag-OS TRL 9. LATAM expansion.</div></div></div>
+      </div>
+      <div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);">
+          <div class="cell"><div class="cell-num" style="font-size:2.8rem;">5</div><div class="cell-title">Farms Owned</div></div>
+          <div class="cell"><div class="cell-num" style="font-size:2.8rem;">2</div><div class="cell-title">Continents</div></div>
+          <div class="cell"><div class="cell-num" style="font-size:2.8rem;">3</div><div class="cell-title">Pilots In Motion</div></div>
+          <div class="cell"><div class="cell-num" style="font-size:2.8rem;">$25M</div><div class="cell-title">Research Funding</div></div>
+        </div>
+        <div style="margin-top:16px;padding:18px 22px;border-left:3px solid var(--gold);background:rgba(196,154,42,.05);">
+          <p class="body-sm">We own and operate farms across AZ, CA, TX, GA, Ontario, and Tamil Nadu. <strong style="color:var(--cream);font-weight:400;">Time-to-validation: months, not years.</strong></p>
+        </div>
+        <div style="margin-top:14px;padding:18px 20px;border:1px solid var(--border);background:var(--bg1);">
+          <div style="font-family:var(--cond);font-size:.58rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Comparable Exits</div>
+          <div style="display:flex;gap:28px;">
+            <div><div style="font-family:var(--serif);font-size:1.2rem;font-weight:800;color:var(--gold);">$2.1B</div><div style="font-family:var(--cond);font-size:.6rem;color:var(--muted);">CNH → Raven</div></div>
+            <div><div style="font-family:var(--serif);font-size:1.2rem;font-weight:800;color:var(--gold);">$2B</div><div style="font-family:var(--cond);font-size:.6rem;color:var(--muted);">Trimble JV</div></div>
+            <div><div style="font-family:var(--serif);font-size:1.2rem;font-weight:800;color:var(--gold);">$250M</div><div style="font-family:var(--cond);font-size:.6rem;color:var(--muted);">Deere → Bear Flag</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 10 — THE ASK
+═══════════════════════════════════════════ -->
+<div class="slide" id="s9" data-i="9">
+  <div class="sbody two-col" style="align-items:stretch;">
+    <div style="padding:110px 70px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);">
+      <div class="label a1">09 — The Ask</div>
+      <div class="a2" style="font-family:var(--serif);font-weight:900;font-size:clamp(5rem,10vw,10rem);line-height:.88;letter-spacing:-.02em;color:var(--cream);">
+        $<span style="color:var(--gold);">4</span>M
+      </div>
+      <div class="a3" style="font-family:var(--cond);font-size:.65rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:14px;">Pre-Seed Round · 2025</div>
+      <div class="a4" style="margin-top:36px;">
+        <div class="use-row"><div class="use-lbl">VLA Autonomy</div><div class="use-track"><div class="use-fill" style="width:100%;"></div></div><div class="use-pct">30%</div></div>
+        <div class="use-row"><div class="use-lbl">Hardware R&D</div><div class="use-track"><div class="use-fill" style="width:89%;animation-delay:.1s;"></div></div><div class="use-pct">26.7%</div></div>
+        <div class="use-row"><div class="use-lbl">Founding Team</div><div class="use-track"><div class="use-fill" style="width:67%;animation-delay:.2s;"></div></div><div class="use-pct">20%</div></div>
+        <div class="use-row"><div class="use-lbl">Field Pilots</div><div class="use-track"><div class="use-fill" style="width:22%;animation-delay:.3s;"></div></div><div class="use-pct">6.7%</div></div>
+        <div class="use-row"><div class="use-lbl">Marketing & Sales</div><div class="use-track"><div class="use-fill" style="width:22%;animation-delay:.4s;"></div></div><div class="use-pct">6.7%</div></div>
+        <div class="use-row"><div class="use-lbl">IP · Legal · Buffer</div><div class="use-track"><div class="use-fill" style="width:30%;animation-delay:.5s;"></div></div><div class="use-pct">10%</div></div>
+      </div>
+    </div>
+    <div style="padding:110px 60px;display:flex;flex-direction:column;justify-content:center;background:var(--bg1);">
+      <div class="label a1" style="margin-bottom:20px;">7-Month Deliverables</div>
+      <div class="a2" style="display:flex;flex-direction:column;gap:0;margin-bottom:32px;">
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-family:var(--body);font-size:.84rem;font-weight:300;color:var(--muted);line-height:1.5;"><div style="width:6px;height:6px;border-radius:50%;border:1px solid var(--gold);background:rgba(196,154,42,.15);flex-shrink:0;margin-top:5px;"></div>MVP retrofit kit on 3–5 commercial farms</div>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-family:var(--body);font-size:.84rem;font-weight:300;color:var(--muted);line-height:1.5;"><div style="width:6px;height:6px;border-radius:50%;border:1px solid var(--gold);background:rgba(196,154,42,.15);flex-shrink:0;margin-top:5px;"></div>Digital twin + Terra-VLA running on real acreage</div>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-family:var(--body);font-size:.84rem;font-weight:300;color:var(--muted);line-height:1.5;"><div style="width:6px;height:6px;border-radius:50%;border:1px solid var(--gold);background:rgba(196,154,42,.15);flex-shrink:0;margin-top:5px;"></div>Core IP portfolio filed</div>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-family:var(--body);font-size:.84rem;font-weight:300;color:var(--muted);line-height:1.5;"><div style="width:6px;height:6px;border-radius:50%;border:1px solid var(--gold);background:rgba(196,154,42,.15);flex-shrink:0;margin-top:5px;"></div>Unit economics validated — per-machine COGS confirmed</div>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-family:var(--body);font-size:.84rem;font-weight:300;color:var(--muted);line-height:1.5;"><div style="width:6px;height:6px;border-radius:50%;border:1px solid var(--gold);background:rgba(196,154,42,.15);flex-shrink:0;margin-top:5px;"></div>10,000+ connected acres · data flywheel initiated</div>
+      </div>
+      <div class="a3" style="padding:20px 22px;border:1px solid var(--border2);background:var(--bg);">
+        <div class="contact-row"><div class="contact-lbl">Email</div><div class="contact-val"><a href="mailto:investor@americantractorcompany.com">investor@americantractorcompany.com</a></div></div>
+        <div class="contact-row"><div class="contact-lbl">Web</div><div class="contact-val"><a href="https://americantractorcompany.com" target="_blank">americantractorcompany.com</a></div></div>
+        <div class="contact-row"><div class="contact-lbl">Phone</div><div class="contact-val">480-370-5833</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const N = slides.length;
+let cur = 0, going = false;
+const curEl = document.getElementById('cur');
+const totEl = document.getElementById('tot');
+const progEl = document.getElementById('prog');
+if (totEl) totEl.textContent = String(N).padStart(2,'0');
+
+const dotsEl = document.getElementById('dots');
+slides.forEach((_,i)=>{
+  const b = document.createElement('button');
+  b.className='sdot'+(i===0?' active':'');
+  b.addEventListener('click',()=>go(i));
+  dotsEl.appendChild(b);
+});
+const dots = Array.from(dotsEl.children);
+
+function refresh(){
+  dots.forEach((d,i)=>d.classList.toggle('active',i===cur));
+  if (curEl) curEl.textContent = String(cur+1).padStart(2,'0');
+  if (progEl) progEl.style.width = (cur/(N-1)*100)+'%';
+}
+
+function go(idx){
+  if(going||idx===cur||idx<0||idx>=N) return;
+  going=true;
+  const prev=slides[cur], next=slides[idx];
+  next.querySelectorAll('[class*="a"]').forEach(el=>{
+    if(!/\ba[1-6]\b/.test(el.className)) return;
+    el.style.animation='none'; el.offsetHeight; el.style.animation='';
+  });
+  prev.classList.add('out');
+  setTimeout(()=>{
+    prev.classList.remove('active','out');
+    next.classList.add('active');
+    cur=idx; refresh();
+    setTimeout(()=>{going=false;},460);
+  },55);
+}
+
+document.getElementById('prev').addEventListener('click',()=>go(cur-1));
+document.getElementById('next').addEventListener('click',()=>go(cur+1));
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();go(cur+1);}
+  if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();go(cur-1);}
+  if(e.key==='Home') go(0);
+  if(e.key==='End')  go(N-1);
+});
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>48){dx<0?go(cur+1):go(cur-1);}},{passive:true});
+slides[0].classList.add('active');
+refresh();
+
+function go(idx){
+  if(going||idx===cur||idx<0||idx>=N) return;
+  going=true;
+  const prev=slides[cur], next=slides[idx];
+  next.querySelectorAll('[class*="a"]').forEach(el=>{
+    if(!/\ba[1-6]\b/.test(el.className)) return;
+    el.style.animation='none'; el.offsetHeight; el.style.animation='';
+  });
+  prev.classList.add('out');
+  setTimeout(()=>{
+    prev.classList.remove('active','out');
+    next.classList.add('active');
+    cur=idx; refresh();
+    setTimeout(()=>{going=false;},460);
+  },55);
+}
+</script>
+</body>
+</html>
