@@ -31,13 +31,11 @@
   /* NAV */
   nav { position:fixed;top:0;left:0;right:0;z-index:200;padding:22px clamp(24px,5vw,60px);display:flex;justify-content:space-between;align-items:center;gap:32px;transition:background .4s; }
   nav.scrolled { background:rgba(16,13,6,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,162,84,.1); }
-  .logo { display:flex;align-items:center;gap:9px;text-decoration:none;min-width:0; }
-  .logo-mark { width:64px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
-  .logo-mark img { width:100%;height:100%;display:block; }
-  .logo-mark svg { width:100%;height:100%;display:block; }
-  .logo-lockup { display:flex;flex-direction:column;gap:6px;min-width:0; }
-  .logo-line { font-family:'Archivo Black',sans-serif;font-size:clamp(13px,1.05vw,20px);letter-spacing:.015em;text-transform:uppercase;line-height:.8;white-space:nowrap;color:var(--straw); }
-  .logo-line .co { color:var(--straw); }
+  .logo { display:flex;align-items:center;gap:22px;text-decoration:none;min-width:0;flex-shrink:0; }
+  .logo-mark { width:78px;height:54px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .logo-mark img { width:100%;height:100%;display:block;object-fit:contain;filter:drop-shadow(0 1px 10px rgba(0,0,0,.25)); }
+  .logo-wordmark { font-family:'Instrument Sans',sans-serif;font-size:clamp(12px,1.08vw,18px);font-weight:500;letter-spacing:.34em;text-transform:uppercase;line-height:1;white-space:nowrap;color:var(--straw);text-shadow:0 1px 12px rgba(0,0,0,.24); }
+  .logo-wordmark-short { display:none; }
   .nav-panel { display:flex;align-items:center;justify-content:flex-end;gap:40px;flex:1;min-width:0; }
   .nav-links { display:flex;gap:40px; }
   .nav-links a { font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--wheat);opacity:.5;text-decoration:none;transition:opacity .2s; }
@@ -215,6 +213,11 @@
     .problem, .sol-top, .testimonial, .american, .invest, .ft-top { grid-template-columns:1fr; gap:48px; }
     .numbers-band { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .ff-grid { grid-template-columns:1fr; gap:18px; }
+    .logo { gap:16px; }
+    .logo-mark { width:64px;height:44px; }
+    .logo-wordmark { font-size:11px;letter-spacing:.24em; }
+    .nav-panel { gap:28px; }
+    .nav-links { gap:28px; }
   }
 
   @media (max-width:840px) {
@@ -226,6 +229,11 @@
     .nav-links { flex-direction:column;gap:14px; }
     .nav-links a { font-size:11px;opacity:.82; }
     .nav-cta { text-align:center;padding:14px 18px; }
+    .logo { gap:12px; }
+    .logo-mark { width:58px;height:38px; }
+    .logo-wordmark { letter-spacing:.08em;font-weight:700;line-height:.9; }
+    .logo-wordmark-full { display:none; }
+    .logo-wordmark-short { display:flex;flex-direction:column;gap:5px; }
     .hero { min-height:100vh;padding:168px 22px 56px; }
     .hero-copy { max-width:none; }
     .hero-video { object-position:center; }
@@ -266,9 +274,9 @@
 
   @media (max-width:560px) {
     html { scroll-padding-top:104px; }
+    .logo { gap:10px; }
     .logo-mark { width:56px;height:34px; }
-    .logo-lockup { gap:4px; }
-    .logo-line { font-size:12px; }
+    .logo-wordmark { font-size:12px;letter-spacing:.04em; }
     .nav-toggle { padding:11px 12px; }
     .hero { padding:144px 20px 52px; }
     .hero-label { margin-bottom:18px; }
@@ -291,14 +299,14 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="logo">
+  <a href="#" class="logo" aria-label="American Tractor Company home">
     <div class="logo-mark">
       <img src="assets/atc-mark.png" alt="" aria-hidden="true">
     </div>
-    <div class="logo-lockup">
-      <div class="logo-line">American</div>
-      <div class="logo-line">Tractor <span class="co">Co.</span></div>
-    </div>
+    <span class="logo-wordmark" aria-hidden="true">
+      <span class="logo-wordmark-full">American Tractor Company</span>
+      <span class="logo-wordmark-short"><span>American</span><span>Tractor Co.</span></span>
+    </span>
   </a>
   <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navMenu">Menu</button>
   <div class="nav-panel" id="navMenu">
